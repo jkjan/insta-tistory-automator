@@ -3,12 +3,12 @@ volumes:
     external: true
 
 services:
-  postgres:
-    image: 'postgres:16.2'
+  db:
+    image: postgres:16.2
+    container_name: ita-db
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=insta_tistory_automator
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
       - TZ=Asia/Seoul
