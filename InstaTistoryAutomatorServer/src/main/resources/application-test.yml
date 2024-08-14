@@ -3,6 +3,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/insta_tistory_automator
     username: test
     password: test
+
   docker:
     compose:
       file: ./InstaTistoryAutomatorServer/compose.yaml

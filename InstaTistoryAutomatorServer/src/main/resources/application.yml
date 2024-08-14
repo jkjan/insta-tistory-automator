@@ -1,3 +1,11 @@
 spring:
   application:
     name: InstaTistoryAutomator
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate

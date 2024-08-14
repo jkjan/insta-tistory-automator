@@ -1,6 +1,5 @@
 volumes:
   ita-volume:
-    external: true
 
 services:
   postgres:
