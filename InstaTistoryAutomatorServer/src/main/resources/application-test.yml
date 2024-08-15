@@ -4,6 +4,13 @@ spring:
     username: test
     password: test
 
+  flyway:
+    baseline-on-migrate: true
+
   docker:
     compose:
       file: ./InstaTistoryAutomatorServer/compose.yaml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
