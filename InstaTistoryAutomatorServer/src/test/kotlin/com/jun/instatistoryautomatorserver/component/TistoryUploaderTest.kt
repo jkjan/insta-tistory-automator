@@ -16,9 +16,10 @@ class TistoryUploaderTest {
         // given
         val tistoryRequestDTO = TistoryRequestDTO(
             title = "test title",
-            category = "술",
+            category = "없는 것",
             imageUrl = "",
-            content = "Hello",
+            content = "<p>test</p>",
+            tags = listOf("tag1", "tag2", "tag3")
         )
 
         tistoryUploader.uploadPostToTistoryBlog(tistoryRequestDTO)
