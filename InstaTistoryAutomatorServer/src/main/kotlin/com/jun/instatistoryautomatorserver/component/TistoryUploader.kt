@@ -1,5 +1,6 @@
 package com.jun.instatistoryautomatorserver.component
 
+import com.jun.instatistoryautomatorserver.annotation.ThrowWithMessage
 import com.jun.instatistoryautomatorserver.dto.TistoryRequestDTO
 import com.jun.instatistoryautomatorserver.exception.TistoryException
 import com.jun.instatistoryautomatorserver.property.TistoryProperty
@@ -36,6 +37,7 @@ class TistoryUploader(
         }
     }
 
+    @ThrowWithMessage("로그인 에러")
     fun login() {
         driver.get(tistoryProperty.entryUrl)
         val currentUrl = driver.currentUrl
@@ -55,6 +57,7 @@ class TistoryUploader(
         buttonLocator.click()
     }
 
+    @ThrowWithMessage("팝업 에러")
     fun handlePopup(cancel: Boolean = true) {
         try {
             wait.until(ExpectedConditions.alertIsPresent())
@@ -73,6 +76,7 @@ class TistoryUploader(
         }
     }
 
+    @ThrowWithMessage("카테고리 선택 에러")
     fun selectCategory(targetCategory: String) {
         val categoryButtonLocator = By.xpath("//button[@id='category-btn']")
         categoryButtonLocator.click()
@@ -98,6 +102,7 @@ class TistoryUploader(
         }
     }
 
+    @ThrowWithMessage("HTML 선택 에러")
     fun selectHTML() {
         val modeSelector = By.xpath("//button[@id='editor-mode-layer-btn-open']")
         modeSelector.click()
@@ -106,11 +111,13 @@ class TistoryUploader(
         htmlSelector.click()
     }
 
+    @ThrowWithMessage("제목 설정 에러")
     fun setTitle(title: String) {
         val titleLocator = By.xpath("//textarea[@id='post-title-inp']")
         titleLocator.write(title)
     }
 
+    @ThrowWithMessage("내용 설정 에러")
     fun setContent(content: String) {
         val codeMirrorLocator = By.xpath("(//div[contains(@class, 'CodeMirror')]//pre[contains(@class, 'CodeMirror-line')])[1]")
         codeMirrorLocator.click()
@@ -119,6 +126,7 @@ class TistoryUploader(
         codeTextAreaLocator.write(content)
     }
 
+    @ThrowWithMessage("태그 설정 에러")
     fun setTags(tags: List<String>) {
         tags.forEach { tag ->
             val tagInputLocator = By.xpath("//input[@id='tagText']")
@@ -128,6 +136,7 @@ class TistoryUploader(
         }
     }
 
+    @ThrowWithMessage("제출 에러")
     fun submit() {
         val publishLayerButtonLocator = By.xpath("//button[@id='publish-layer-btn']")
         publishLayerButtonLocator.click()
