@@ -14,3 +14,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+webdriver:
+  timeout: 3
+  arguments:
+    - --lang=ko

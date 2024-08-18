@@ -29,7 +29,7 @@ extra["springCloudVersion"] = "2023.0.3"
 
 dependencies {
     // Spring
-    implementation("org.springframework.boot:spring-boot-starter-batch")
+//    implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -45,13 +45,16 @@ dependencies {
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.springframework.batch:spring-batch-test")
+//    testImplementation("org.springframework.batch:spring-batch-test")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // 기타
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
+    // 크롤링
+    implementation("org.seleniumhq.selenium:selenium-java")
 }
 
 dependencyManagement {
