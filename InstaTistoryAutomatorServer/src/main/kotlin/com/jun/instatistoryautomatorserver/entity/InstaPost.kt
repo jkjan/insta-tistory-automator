@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
+import java.time.OffsetDateTime
 
 
 enum class MediaType {
@@ -14,20 +15,22 @@ enum class MediaType {
 }
 
 @Entity
-class InstaPost {
+class InstaPost(
     @Id
     @Column(nullable = false, length = 64)
-    var instaId: String? = null
+    var instaId: String? = null,
 
     @Column(length = 2083)
-    var mediaUrl: String? = null
+    var mediaUrl: String? = null,
 
     @Column(length = 2083)
-    var permalink: String? = null
+    var permalink: String? = null,
 
-    var caption: String? = null
+    var caption: String? = null,
 
-    var timestamp: Instant? = null
+    var timestamp: OffsetDateTime? = null,
 
-    var fetchedTimestamp: MediaType? = null
-}
+    var mediaType: MediaType? = null,
+
+    var fetchedTimestamp: OffsetDateTime? = null,
+)

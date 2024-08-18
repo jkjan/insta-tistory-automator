@@ -1,4 +1,8 @@
 package com.jun.instatistoryautomatorserver.repository
 
-interface InstaRepository {
+import com.jun.instatistoryautomatorserver.entity.InstaPost
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface InstaRepository: JpaRepository<InstaPost, String> {
+    fun findFirstByOrderByTimestampDesc(): InstaPost?
 }
