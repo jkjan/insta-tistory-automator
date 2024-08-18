@@ -22,6 +22,5 @@ class TistoryUploaderTest {
         )
 
         tistoryUploader.uploadPostToTistoryBlog(tistoryRequestDTO)
-
     }
 }

@@ -55,6 +55,9 @@ dependencies {
 
     // 크롤링
     implementation("org.seleniumhq.selenium:selenium-java")
+
+    // Logging
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 }
 
 dependencyManagement {

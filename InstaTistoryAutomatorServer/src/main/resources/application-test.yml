@@ -9,7 +9,7 @@ spring:
 
   docker:
     compose:
-      file: ./InstaTistoryAutomatorServer/compose.yaml
+      file: InstaTistoryAutomatorServer/compose.yaml
 
   jpa:
     hibernate:
@@ -17,5 +17,6 @@ spring:
 
 webdriver:
   timeout: 3
+  chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --lang=ko

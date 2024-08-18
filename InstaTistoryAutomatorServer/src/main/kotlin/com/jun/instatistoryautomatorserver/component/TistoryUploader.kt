@@ -2,61 +2,49 @@ package com.jun.instatistoryautomatorserver.component
 
 import com.jun.instatistoryautomatorserver.dto.TistoryRequestDTO
 import com.jun.instatistoryautomatorserver.exception.LoginException
-import com.jun.instatistoryautomatorserver.property.TistoryLoginProperty
+import com.jun.instatistoryautomatorserver.exception.PopupException
+import com.jun.instatistoryautomatorserver.property.TistoryProperty
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.openqa.selenium.By
+import org.openqa.selenium.NotFoundException
+import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.Wait
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
-import java.sql.Time
 
 @Component
-@EnableConfigurationProperties(TistoryLoginProperty::class)
+@EnableConfigurationProperties(TistoryProperty::class)
 class TistoryUploader(
-    private val loginProperty: TistoryLoginProperty,
+    private val tistoryProperty: TistoryProperty,
     private val driver: ChromeDriver,
     private val wait: Wait<WebDriver>,
 ) {
     fun uploadPostToTistoryBlog(tistoryRequestDTO: TistoryRequestDTO) {
-        driver.get(POST_ENTRY_URL)
-        val currentUrl = driver.currentUrl
-
-        // 로그인 절차
-        if (currentUrl.contains("tistory")) {
-            login()
-        }
-
-        // 이전 글 팝업 해제
-        wait.until(ExpectedConditions.alertIsPresent())
-        driver.switchTo().alert()?.dismiss()
-        driver.switchTo().defaultContent()
-
-        // 본문
-        // 1. 카테고리
-        driver.findElement(By.id("category-btn")).click()
-        val options = driver.findElements(By.xpath("//div[@id='category-list']//span"))
-        println(options)
-        for (option in options) {
-            println(option)
-            wait.until(ExpectedConditions.elementToBeClickable(option))
-            val category = option.text
-            category.contains(tistoryRequestDTO.category)
-            option.click()
-        }
+        login()
+        handlePopup()
+        selectCategory(tistoryRequestDTO.category)
+        selectHTML()
+        handlePopup(cancel = false)
+        Thread.sleep(3000)
     }
 
     fun login() {
+        driver.get(tistoryProperty.entryUrl)
+        val currentUrl = driver.currentUrl
+        if (!currentUrl.contains("tistory")) return
+
         try {
             val loginLink = driver.findElement(By.className("btn_login"))
             loginLink.click()
 
             val email = driver.findElement(By.id("loginId--1"))
-            email.sendKeys(loginProperty.email)
+            email.sendKeys(tistoryProperty.email)
 
             val password = driver.findElement(By.id("password--2"))
-            password.sendKeys(loginProperty.password)
+            password.sendKeys(tistoryProperty.password)
 
             val button = driver.findElement(By.className("submit"))
             button.click()
@@ -65,8 +53,63 @@ class TistoryUploader(
         }
     }
 
+    fun handlePopup(cancel: Boolean = true) {
+        try {
+            wait.until(ExpectedConditions.alertIsPresent())
+
+            if (cancel)
+                driver.switchTo().alert()?.dismiss()
+            else
+                driver.switchTo().alert()?.accept()
+
+            driver.switchTo().defaultContent()
+        } catch (e: Exception) {
+            if (e is TimeoutException) {
+                logger.info { }
+                return
+            }
+            else {
+                throw PopupException("팝업 해제 실패", e)
+            }
+        }
+    }
+
+    fun selectCategory(targetCategory: String) {
+        val categoryButtonLocator = By.xpath("//button[@id='category-btn']")
+        categoryButtonLocator.click()
+
+        var categoryIndex = 1
+
+        while (true) {
+            try {
+                val categoryLocator = By.xpath("(//div[@id='category-list']//span)[${categoryIndex++}]")
+                val category = driver.findElement(categoryLocator)
+
+                if (category.text.contains(targetCategory)) {
+                    category.click()
+                    break
+                }
+            } catch (e: NotFoundException) {
+                val noCategorySelector = By.xpath("(//div[@id='category-list']//span)[1]")
+                noCategorySelector.click()
+            }
+        }
+    }
+
+    fun selectHTML() {
+        val modeSelector = By.xpath("//button[@id='editor-mode-layer-btn-open']")
+        modeSelector.click()
+
+        val htmlSelector = By.xpath("//div[@id='editor-mode-html']")
+        htmlSelector.click()
+    }
+
+    fun By.click() {
+        wait.until(ExpectedConditions.elementToBeClickable(this))
+        driver.findElement(this).click()
+    }
+
     companion object {
-        const val POST_ENTRY_URL = "https://www.tistory.com/auth/login?redirectUrl=https%3A%2F%2Fnowhereland.tistory.com%2Fmanage%2Fnewpost%2F"
-        const val BLOG_NAME = "nowhereland"
+        val logger = KotlinLogging.logger {  }
     }
 }
