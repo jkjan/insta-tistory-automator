@@ -9,11 +9,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Configuration
-class RetrofitConfig(private val instaProperty: InstaProperty) {
+class RetrofitConfig {
     @Bean(name=["insta"])
     fun retrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl(instaProperty.baseUrl)
+            .baseUrl("http://localhost:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

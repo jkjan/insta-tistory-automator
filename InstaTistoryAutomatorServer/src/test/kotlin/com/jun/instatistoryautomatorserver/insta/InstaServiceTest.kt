@@ -1,28 +1,21 @@
-package com.jun.instatistoryautomatorserver.service
+package com.jun.instatistoryautomatorserver.insta
 
-import com.jun.instatistoryautomatorserver.config.RetrofitConfig
-import com.jun.instatistoryautomatorserver.entity.InstaPost
-import com.jun.instatistoryautomatorserver.property.InstaProperty
-import com.jun.instatistoryautomatorserver.repository.InstaRepository
-import com.jun.instatistoryautomatorserver.service.InstaServiceTest.Companion.PORT
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
+import com.jun.instatistoryautomatorserver.service.InstaService
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.given
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+import org.springframework.context.annotation.Import
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@WebMvcTest(InstaService::class, InstaProperty::class, RetrofitConfig::class)
+@ExtendWith(SpringExtension::class)
 @AutoConfigureWireMock(port = PORT)
+@Import(InstaTestConfig::class)
 class InstaServiceTest {
-    @MockBean
-    lateinit var instaRepository: InstaRepository
-
     @SpyBean
     lateinit var instaService: InstaService
 
