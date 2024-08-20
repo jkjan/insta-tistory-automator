@@ -1,9 +1,9 @@
 package com.jun.instatistoryautomatorserver.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.Type
+import org.hibernate.type.SqlTypes
 import java.time.Instant
 import java.time.OffsetDateTime
 
@@ -30,6 +30,8 @@ class InstaPost(
 
     var timestamp: OffsetDateTime? = null,
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     var mediaType: MediaType? = null,
 
     var fetchedTimestamp: OffsetDateTime? = null,

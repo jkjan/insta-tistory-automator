@@ -13,10 +13,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
+
+  data:
+    jdbc:
+      dialect: postgresql
 
 webdriver:
   timeout: 3
   chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --lang=ko
+
+insta:
+  base-url: http://localhost:${wiremock.server.port}
