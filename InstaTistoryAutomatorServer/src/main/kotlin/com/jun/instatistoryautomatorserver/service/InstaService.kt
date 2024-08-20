@@ -2,6 +2,7 @@ package com.jun.instatistoryautomatorserver.service
 
 import com.jun.instatistoryautomatorserver.dto.InstaApi
 import com.jun.instatistoryautomatorserver.dto.InstaResponseDTO
+import com.jun.instatistoryautomatorserver.dto.correct
 import com.jun.instatistoryautomatorserver.entity.InstaPost
 import com.jun.instatistoryautomatorserver.exception.InstaException
 import com.jun.instatistoryautomatorserver.property.InstaProperty
@@ -23,20 +24,23 @@ class InstaService(
     private val instaApi: InstaApi,
 ) {
     @Transactional
-    suspend fun fetchInstaPost() {
+    suspend fun fetchInstaPost(): List<InstaPost> {
         val initialUrl = getInitialUrl()
 
-        coroutineScope {
-            launch {
-                try {
-                    instaRepository.saveAll(
+        val fetchedInstaPosts =
+            coroutineScope {
+                async {
+                    try {
                         getInstaPosts(initialUrl)
-                    )
-                } catch (e: Exception) {
-                    throw InstaException("인스타 데이터 가져오기 실패", e)
-                }
+                    } catch (e: Exception) {
+                        throw InstaException("인스타 데이터 가져오기 실패", e)
+                    }
+                }.await()
             }
-        }
+
+        instaRepository.saveAll(fetchedInstaPosts)
+
+        return fetchedInstaPosts
     }
 
     fun getInitialUrl(): String {
@@ -54,49 +58,31 @@ class InstaService(
 
         return if (lastInstaPost != null) {
             lastInstaPost.timestamp!!
-        }
-        else {
+        } else {
             OffsetDateTime.parse(FIRST_BEER_POST_TIMESTAMP.correct(), DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         }
     }
 
     suspend fun getInstaPosts(url: String): List<InstaPost> {
-        val instaPosts = mutableListOf<InstaPost>()
-        val instaResponseDTO = instaApi.getInstaPosts(url)
         logger.info { "인스타 API 요청: $url" }
+        val instaResponseDTO = instaApi.getInstaPosts(url)
 
         with(instaResponseDTO) {
             if (isOkAndHasBody()) {
                 with(body()!!) {
-                    paging?.next?.let {
-                        coroutineScope {
-                            launch {
-                                getInstaPosts(it)
-                            }.join()
-                        }
+                    return (paging?.next?.let {
+                        getInstaPosts(it)
                     }
+                        ?: listOf()) +
 
-                    return instaPosts +
-                            `data`.map {
-                                InstaPost(
-                                    instaId = it.id,
-                                    mediaUrl = it.mediaUrl,
-                                    permalink = it.permalink,
-                                    caption = it.caption,
-                                    timestamp = OffsetDateTime.parse(it.timestamp!!.correct()),
-                                    mediaType = it.mediaType,
-                                    fetchedTimestamp = OffsetDateTime.now()
-                                )
-                            }.reversed()
+                            (`data`.map {
+                                it.toInstaPost()
+                            }.reversed())
                 }
             } else {
                 throw InstaException("인스타 API 호출했으나 성공적이지 않음")
             }
         }
-    }
-
-    fun String.correct(): String {
-        return StringBuilder(this).apply { insert(22, ':') }.toString()
     }
 
     companion object {

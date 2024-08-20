@@ -1,47 +1,47 @@
 package com.jun.instatistoryautomatorserver.service
 
-import com.jun.instatistoryautomatorserver.YamlPropertySourceFactory
 import com.jun.instatistoryautomatorserver.config.RetrofitConfig
-import com.jun.instatistoryautomatorserver.config.TestConfig
+import com.jun.instatistoryautomatorserver.entity.InstaPost
 import com.jun.instatistoryautomatorserver.property.InstaProperty
+import com.jun.instatistoryautomatorserver.repository.InstaRepository
+import com.jun.instatistoryautomatorserver.service.InstaServiceTest.Companion.PORT
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.kotlin.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.SpringBootConfiguration
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.test.web.client.getForEntity
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.context.annotation.PropertySource
-import org.springframework.http.HttpStatus
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.TestPropertySources
 
-@SpringBootTest
-//@ContextConfiguration(classes = [TestConfig::class, RetrofitConfig::class, InstaProperty::class])
-@AutoConfigureWireMock(port = 0)
-//@TestPropertySource("classpath:application.properties")
-@EnableConfigurationProperties(InstaProperty::class)
+@WebMvcTest(InstaService::class, InstaProperty::class, RetrofitConfig::class)
+@AutoConfigureWireMock(port = PORT)
 class InstaServiceTest {
-    @Value("\${wiremock.server.port}")
-    private var port: Int = 0
+    @MockBean
+    lateinit var instaRepository: InstaRepository
 
-    private val template = TestRestTemplate()
-//
-//    @Autowired
-//    private lateinit var instaApi: InstaApi
+    @SpyBean
+    lateinit var instaService: InstaService
 
     @Test
-    fun fetchInstaPost() {
-        val response = template.getForEntity<String>("http://localhost:$port/some/thing")
-        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body).isEqualTo("Hello, world!")
+    fun fetchInstaPost() = runTest {
+        val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
+        given(instaService.getInitialUrl()).willReturn(testUrl)
+        val instaPosts = instaService.fetchInstaPost()
+
+        assertThat(instaPosts).hasSize(6)
+        assertThat(instaPosts[0].instaId).isEqualTo("1")
+        assertThat(instaPosts[1].instaId).isEqualTo("2")
+        assertThat(instaPosts[2].instaId).isEqualTo("3")
+        assertThat(instaPosts[3].instaId).isEqualTo("4")
+        assertThat(instaPosts[4].instaId).isEqualTo("5")
+        assertThat(instaPosts[5].instaId).isEqualTo("6")
+    }
+
+    companion object {
+        const val PORT = 6000
     }
 }

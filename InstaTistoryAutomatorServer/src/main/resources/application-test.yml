@@ -24,6 +24,3 @@ webdriver:
   chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --lang=ko
-
-insta:
-  base-url: http://localhost:${wiremock.server.port}
