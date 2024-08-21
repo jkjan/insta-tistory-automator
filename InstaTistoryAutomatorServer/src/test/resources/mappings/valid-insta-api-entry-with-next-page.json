@@ -1,0 +1,49 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/valid-insta-api-entry-with-next-page"
+  },
+
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "data": [
+        {
+          "caption": "test caption 6",
+          "id": "6",
+          "media_type": "IMAGE",
+          "media_url": "https://test-media-url6.com/",
+          "permalink": "https://test-permalink6.com/",
+          "timestamp": "1997-10-15T00:00:00+0000"
+        },
+        {
+          "caption": "test caption 5",
+          "id": "5",
+          "media_type": "IMAGE",
+          "media_url": "https://test-media-url5.com/",
+          "permalink": "https://test-permalink5.com/",
+          "timestamp": "1997-10-15T00:00:00+0000"
+        },
+        {
+          "caption": "test caption 4",
+          "id": "4",
+          "media_type": "IMAGE",
+          "media_url": "https://test-media-url4.com/",
+          "permalink": "https://test-permalink4.com/",
+          "timestamp": "1997-10-15T00:00:00+0000"
+        }
+      ],
+      "paging": {
+        "cursors": {
+          "before": "test",
+          "after": "test"
+        },
+        "next": "http://localhost:6000/valid-insta-api-next-page"
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+

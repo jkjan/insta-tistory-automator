@@ -1,3 +1,14 @@
 spring:
   application:
     name: InstaTistoryAutomator
+
+insta:
+  base-url: https://graph.instagram.com
+  api-version: v20.0
+  media-fields:
+    - id
+    - media_type
+    - media_url
+    - caption
+    - permalink
+    - timestamp

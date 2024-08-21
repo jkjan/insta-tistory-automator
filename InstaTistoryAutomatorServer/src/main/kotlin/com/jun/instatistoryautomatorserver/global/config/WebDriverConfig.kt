@@ -1,13 +1,11 @@
-package com.jun.instatistoryautomatorserver.config
+package com.jun.instatistoryautomatorserver.global.config
 
-import com.jun.instatistoryautomatorserver.property.WebDriverProperty
+import com.jun.instatistoryautomatorserver.global.property.WebDriverProperty
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.support.ui.Wait
 import org.openqa.selenium.support.ui.WebDriverWait
-import org.springframework.beans.factory.DisposableBean
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

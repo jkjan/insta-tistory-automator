@@ -1,4 +1,4 @@
-package com.jun.instatistoryautomatorserver.dto
+package com.jun.instatistoryautomatorserver.application.dto
 
 data class TistoryRequestDTO (
     val title: String,
