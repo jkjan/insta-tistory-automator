@@ -1,8 +1,8 @@
 package com.jun.instatistoryautomatorserver.insta
 
-import com.jun.instatistoryautomatorserver.controller.InstaController
-import com.jun.instatistoryautomatorserver.entity.InstaPost
-import com.jun.instatistoryautomatorserver.service.InstaService
+import com.jun.instatistoryautomatorserver.adapter.`in`.InstaController
+import com.jun.instatistoryautomatorserver.domain.InstaPost
+import com.jun.instatistoryautomatorserver.application.model.InstaService
 import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -29,7 +29,7 @@ open class InstaControllerTest {
     private lateinit var instaService: InstaService
 
     @Test
-    open fun `인스타 게시글이 DB에 저장됨`() = runTest {
+    open fun `인스타 게시글 가져오는 API 성공`() = runTest {
         // given
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
