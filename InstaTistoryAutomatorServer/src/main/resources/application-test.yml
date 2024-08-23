@@ -20,7 +20,4 @@ spring:
       dialect: postgresql
 
 webdriver:
-  timeout: 3
   chrome-driver-path: InstaTistoryAutomatorServer/src/main/resources/chromedriver
-  arguments:
-    - --lang=ko

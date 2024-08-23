@@ -18,10 +18,12 @@ class InstaController(private val instaService: InstaService) {
 
         return ResponseEntity
             .status(
-                if (instaPosts.isNotEmpty())
+                if (instaPosts.isNotEmpty()) {
                     HttpStatus.OK
-                else
-                    HttpStatus.NO_CONTENT)
+                } else {
+                    HttpStatus.NO_CONTENT
+                },
+            )
             .body(instaPosts)
     }
 

@@ -23,10 +23,10 @@ class WebDriverConfig(private val webDriverProperty: WebDriverProperty) {
     @Bean(destroyMethod = "quit")
     fun chromeDriver(): ChromeDriver =
         ChromeDriver(
-                ChromeOptions()
-                    .addArguments(webDriverProperty.arguments)
-                    .setExperimentalOption("excludeSwitches", listOf("disable-popup-blocking"))
-            )
+            ChromeOptions()
+                .addArguments(webDriverProperty.arguments)
+                .setExperimentalOption("excludeSwitches", listOf("disable-popup-blocking")),
+        )
 
     @Bean
     fun waitConfig(driver: ChromeDriver): Wait<WebDriver> =

@@ -24,7 +24,7 @@ class InstaService(
     private val instaApi: InstaApi,
 ) {
     @Transactional
-    @ThrowWithMessage("Instagram API 호출에 실패했습니다.")
+    @ThrowWithMessage("Instagram API 호출에 실패했습니다.", InstaException::class)
     suspend fun fetchInstaPost(): List<InstaPost> {
         val initialUrl = getInitialUrl()
 
@@ -67,12 +67,15 @@ class InstaService(
         with(instaResponseDTO) {
             if (isOkAndHasBody()) {
                 with(body()!!) {
-                    return (paging?.next?.let {
-                        getInstaPosts(it)
-                    }
-                        ?: listOf()) +
+                    return (
+                        paging?.next?.let {
+                            getInstaPosts(it)
+                        }
+                            ?: listOf()
+                        ) +
 
-                            (`data`.map {
+                        (
+                            `data`.map {
                                 with(it) {
                                     InstaPost(
                                         instaId = id,
@@ -81,10 +84,11 @@ class InstaService(
                                         caption = caption,
                                         timestamp = OffsetDateTime.parse(timestamp!!.correct()),
                                         mediaType = mediaType,
-                                        fetchedTimestamp = OffsetDateTime.now()
+                                        fetchedTimestamp = OffsetDateTime.now(),
                                     )
                                 }
-                            }.reversed())
+                            }.reversed()
+                            )
                 }
             } else {
                 throw InstaException("인스타 API 호출했으나 성공적이지 않음")
@@ -96,12 +100,8 @@ class InstaService(
         const val FIRST_BEER_POST_TIMESTAMP = "2024-06-20T12:00:53+0000"
         val logger = KotlinLogging.logger {}
 
-        fun <T> Response<T>.isOkAndHasBody(): Boolean {
-            return this.isSuccessful && this.body() != null
-        }
+        fun <T> Response<T>.isOkAndHasBody(): Boolean = this.isSuccessful && this.body() != null
 
-        fun String.correct(): String {
-            return StringBuilder(this).apply { insert(22, ':') }.toString()
-        }
+        fun String.correct(): String = StringBuilder(this).apply { insert(22, ':') }.toString()
     }
 }

@@ -1,11 +1,14 @@
 package com.jun.instatistoryautomatorserver.domain
 
 import com.jun.instatistoryautomatorserver.global.type.MediaType
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
+import java.time.OffsetDateTime
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
-import java.time.OffsetDateTime
-
 
 @Entity
 class InstaPost(

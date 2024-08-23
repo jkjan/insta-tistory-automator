@@ -1,9 +1,11 @@
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("plugin.spring") version "1.9.24"
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.spring") version "1.9.23"
+    kotlin("plugin.jpa") version "1.9.23"
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("plugin.jpa") version "1.9.24"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "com.jun"
@@ -87,4 +89,16 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(files("$rootDir/linter/detekt.yml"))
+}
+
+tasks.register("printRootDir") {
+    doLast {
+        println("Root directory: ${project.rootDir}")
+    }
 }

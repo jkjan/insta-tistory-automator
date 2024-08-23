@@ -9,5 +9,4 @@ class InstaTistoryAutomatorServerApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

@@ -5,4 +5,3 @@ enum class MediaType {
     VIDEO,
     CAROUSEL_ALBUM,
 }
-

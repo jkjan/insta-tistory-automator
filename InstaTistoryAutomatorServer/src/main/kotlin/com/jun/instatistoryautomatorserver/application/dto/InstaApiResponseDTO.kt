@@ -1,6 +1,6 @@
 package com.jun.instatistoryautomatorserver.application.dto
 
-data class InstaApiResponseDTO (
+data class InstaApiResponseDTO(
     var `data`: List<InstaPostResponseDTO>,
     var paging: Paging?,
 ) {
