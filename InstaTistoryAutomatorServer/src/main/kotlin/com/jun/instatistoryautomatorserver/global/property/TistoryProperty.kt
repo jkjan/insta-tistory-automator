@@ -7,5 +7,4 @@ data class TistoryProperty(
     val entryUrl: String,
     val email: String,
     val password: String,
-    val url: Map<String, String>,
 )

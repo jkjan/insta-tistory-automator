@@ -6,11 +6,11 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class InstaTistoryAutomatorServerApplication {
-    fun main(args: Array<String>) {
-        runApplication<InstaTistoryAutomatorServerApplication>(*args)
-    }
-
     companion object {
         val logger = KotlinLogging.logger {}
     }
+}
+
+fun main(args: Array<String>) {
+    runApplication<InstaTistoryAutomatorServerApplication>(*args)
 }
