@@ -52,11 +52,9 @@ class NowherelandTistoryManageNPage(
             }
 
             driver.switchTo().defaultContent()
-        } catch (e: Exception) {
-            if (e is TimeoutException) {
-                logger.info { "팝업 없음" }
-                return
-            }
+        } catch (e: TimeoutException) {
+            logger.info(e) { "팝업 없음" }
+            return
         }
     }
 
@@ -78,7 +76,7 @@ class NowherelandTistoryManageNPage(
                     break
                 }
             } catch (e: NotFoundException) {
-                logger.error { "$targetCategory 포함하는 카테고리 없음: 기본 카테고리로 대체" }
+                logger.error(e) { "$targetCategory 포함하는 카테고리 없음: 기본 카테고리로 대체" }
                 val noCategorySelector = By.xpath("(//div[@id='category-list']//span)[1]")
                 noCategorySelector.clickWhenLoaded()
                 break

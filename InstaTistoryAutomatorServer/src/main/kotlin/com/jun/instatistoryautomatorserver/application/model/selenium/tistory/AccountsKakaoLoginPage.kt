@@ -25,8 +25,8 @@ class AccountsKakaoLoginPage(private val tistoryProperty: TistoryProperty, priva
         super.setUp()
     }
 
-    @ThrowWithMessage("로그인 에러", TistoryException::class)
     @AfterSetUp
+    @ThrowWithMessage("로그인 에러", TistoryException::class)
     fun login() {
         inputLogin.sendKeysWhenLoaded(tistoryProperty.email)
         inputPassword.sendKeys(tistoryProperty.password)

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 @Component
 class ExceptionAspect {
     @Around("@annotation(throwWithMessage)")
+    @Suppress("TooGenericExceptionCaught")
     fun handleTistoryException(pjp: ProceedingJoinPoint, throwWithMessage: ThrowWithMessage) {
         try {
             pjp.proceed()

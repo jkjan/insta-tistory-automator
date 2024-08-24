@@ -1,7 +1,10 @@
 package com.jun.instatistoryautomatorserver.application.dto
 
 import com.google.gson.annotations.SerializedName
+import com.jun.instatistoryautomatorserver.application.model.InstaService.Companion.correct
+import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.global.type.MediaType
+import java.time.OffsetDateTime
 
 data class InstaPostResponseDTO(
     var id: String?,
@@ -14,4 +17,15 @@ data class InstaPostResponseDTO(
     var caption: String?,
     var permalink: String?,
     var timestamp: String?,
-)
+) {
+    fun toInstaPost() =
+        InstaPost(
+            instaId = id,
+            mediaUrl = mediaUrl,
+            permalink = permalink,
+            caption = caption,
+            timestamp = OffsetDateTime.parse(timestamp!!.correct()),
+            mediaType = mediaType,
+            fetchedTimestamp = OffsetDateTime.now(),
+        )
+}

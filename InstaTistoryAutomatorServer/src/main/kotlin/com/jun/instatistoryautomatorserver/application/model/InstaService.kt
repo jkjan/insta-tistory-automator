@@ -64,35 +64,20 @@ class InstaService(
         logger.info { "인스타 API 요청: $url" }
         val instaResponseDTO = instaApi.getInstaPosts(url)
 
-        with(instaResponseDTO) {
-            if (isOkAndHasBody()) {
-                with(body()!!) {
-                    return (
-                        paging?.next?.let {
-                            getInstaPosts(it)
-                        }
-                            ?: listOf()
-                        ) +
+        if (instaResponseDTO.isOkAndHasBody()) {
+            with(instaResponseDTO.body()!!) {
+                val nextInstaPosts = paging?.next?.let {
+                    getInstaPosts(it)
+                } ?: listOf()
 
-                        (
-                            `data`.map {
-                                with(it) {
-                                    InstaPost(
-                                        instaId = id,
-                                        mediaUrl = mediaUrl,
-                                        permalink = permalink,
-                                        caption = caption,
-                                        timestamp = OffsetDateTime.parse(timestamp!!.correct()),
-                                        mediaType = mediaType,
-                                        fetchedTimestamp = OffsetDateTime.now(),
-                                    )
-                                }
-                            }.reversed()
-                            )
-                }
-            } else {
-                throw InstaException("인스타 API 호출했으나 성공적이지 않음")
+                val instaPostFromResponse = `data`.map {
+                    it.toInstaPost()
+                }.reversed()
+
+                return nextInstaPosts + instaPostFromResponse
             }
+        } else {
+            throw InstaException("인스타 API 호출했으나 성공적이지 않음")
         }
     }
 
