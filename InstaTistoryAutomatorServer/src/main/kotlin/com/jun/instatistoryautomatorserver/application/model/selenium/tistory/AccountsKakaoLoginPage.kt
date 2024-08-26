@@ -7,9 +7,11 @@ import com.jun.instatistoryautomatorserver.global.exception.TistoryException
 import com.jun.instatistoryautomatorserver.global.property.TistoryProperty
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
+@EnableConfigurationProperties(TistoryProperty::class)
 class AccountsKakaoLoginPage(private val tistoryProperty: TistoryProperty, private val tistoryAuthLoginPage: TistoryAuthLoginPage) : BaseSeleniumPage() {
     @FindBy(xpath = "//*[@id='loginId--1']")
     lateinit var inputLogin: WebElement

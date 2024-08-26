@@ -2,7 +2,7 @@ package com.jun.instatistoryautomatorserver.application.model
 
 import com.jun.instatistoryautomatorserver.adapter.out.api.InstaApi
 import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
-import com.jun.instatistoryautomatorserver.domain.InstaPost
+import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
 import com.jun.instatistoryautomatorserver.global.exception.InstaException
 import com.jun.instatistoryautomatorserver.global.property.InstaProperty
@@ -25,19 +25,21 @@ class InstaService(
 ) {
     @Transactional
     @ThrowWithMessage("Instagram API 호출에 실패했습니다.", InstaException::class)
-    suspend fun fetchInstaPost(): List<InstaPost> {
+    suspend fun fetchInstaPost(): List<InstaPostResponseDTO> {
         val initialUrl = getInitialUrl()
 
-        val fetchedInstaPosts =
+        val fetchedInstaPostResponse =
             coroutineScope {
                 async {
                     getInstaPosts(initialUrl)
                 }.await()
             }
 
-        instaRepository.saveAll(fetchedInstaPosts)
+        val instaPosts = fetchedInstaPostResponse.map { it.toNewInstaPost() }
 
-        return fetchedInstaPosts
+        instaRepository.saveAll(instaPosts)
+
+        return fetchedInstaPostResponse
     }
 
     fun getInitialUrl(): String {
@@ -60,7 +62,7 @@ class InstaService(
         }
     }
 
-    suspend fun getInstaPosts(url: String): List<InstaPost> {
+    suspend fun getInstaPosts(url: String): List<InstaPostResponseDTO> {
         logger.info { "인스타 API 요청: $url" }
         val instaResponseDTO = instaApi.getInstaPosts(url)
 
@@ -70,9 +72,7 @@ class InstaService(
                     getInstaPosts(it)
                 } ?: listOf()
 
-                val instaPostFromResponse = `data`.map {
-                    it.toInstaPost()
-                }.reversed()
+                val instaPostFromResponse = `data`.reversed()
 
                 return nextInstaPosts + instaPostFromResponse
             }
@@ -82,7 +82,7 @@ class InstaService(
     }
 
     companion object {
-        const val FIRST_BEER_POST_TIMESTAMP = "2024-06-20T12:00:53+0000"
+        const val FIRST_BEER_POST_TIMESTAMP = "2024-08-25T12:00:53+0000"
         val logger = KotlinLogging.logger {}
 
         fun <T> Response<T>.isOkAndHasBody(): Boolean = this.isSuccessful && this.body() != null

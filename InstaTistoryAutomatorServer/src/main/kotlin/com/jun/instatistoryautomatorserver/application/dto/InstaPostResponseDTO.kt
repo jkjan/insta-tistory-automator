@@ -18,7 +18,7 @@ data class InstaPostResponseDTO(
     var permalink: String?,
     var timestamp: String?,
 ) {
-    fun toInstaPost() =
+    fun toNewInstaPost() =
         InstaPost(
             instaId = id,
             mediaUrl = mediaUrl,
@@ -27,5 +27,6 @@ data class InstaPostResponseDTO(
             timestamp = OffsetDateTime.parse(timestamp!!.correct()),
             mediaType = mediaType,
             fetchedTimestamp = OffsetDateTime.now(),
+            tistoryFetched = false,
         )
 }

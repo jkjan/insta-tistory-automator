@@ -1,45 +1,48 @@
 package com.jun.instatistoryautomatorserver.domain
 
+import com.jun.instatistoryautomatorserver.global.type.UploadStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.SequenceGenerator
-import jakarta.persistence.Table
-import java.time.Instant
+import java.time.OffsetDateTime
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "tistory_post")
-class TistoryPost {
+class TistoryPost(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tistory_post_id_gen")
     @SequenceGenerator(name = "tistory_post_id_gen", sequenceName = "tistory_post_tistory_id_seq", allocationSize = 1)
     @Column(name = "tistory_id", nullable = false)
-    var id: Int? = null
+    var id: Int = 0,
 
     @Column(name = "insta_id", length = 64)
-    var instaId: String? = null
+    var instaId: String? = null,
 
-    @Column(name = "upload_timestamp")
-    var uploadTimestamp: Instant? = null
+    var uploadTimestamp: OffsetDateTime? = null,
 
-    @Column(name = "tistory_url", length = 2083)
-    var tistoryUrl: String? = null
+    @Column(length = 2083)
+    var tistoryUrl: String? = null,
 
-    @Column(name = "title", length = 256)
-    var title: String? = null
+    @Column(length = 256)
+    var title: String? = null,
 
-    @Column(name = "content", length = Integer.MAX_VALUE)
-    var content: String? = null
+    @Column(length = Integer.MAX_VALUE)
+    var content: String? = null,
 
-    @Column(name = "category", length = 256)
-    var category: String? = null
+    @Column(length = 256)
+    var category: String? = null,
 
-    /*
-         TODO [Reverse Engineering] create field to map the 'tags' column
-         Available actions: Define target Java type | Uncomment as is | Remove column mapping
-            @Column(name = "tags", columnDefinition = "varchar [](256)")
-            var tags: Any? = null
-        */
-}
+    var tags: String? = null,
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    var uploadStatus: UploadStatus? = null,
+
+    var fetchedTimestamp: OffsetDateTime? = null,
+)

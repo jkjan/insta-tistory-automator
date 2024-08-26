@@ -12,7 +12,7 @@ import org.springframework.test.context.TestPropertySource
 @SpringBootTest
 @TestPropertySource(properties = ["webdriver.chrome-driver-path=src/main/resources/chromedriver"])
 @ActiveProfiles("test", "credentials")
-class TistoryServiceTest {
+class TistoryUploadTest {
     @Autowired
     lateinit var tistoryService: TistoryService
 
@@ -23,7 +23,6 @@ class TistoryServiceTest {
         val tistoryRequestDTO = TistoryRequestDTO(
             title = "test title",
             category = "술",
-            imageUrl = "",
             content = "<p>test</p>",
             tags = listOf("tag1", "tag2", "tag3"),
         )

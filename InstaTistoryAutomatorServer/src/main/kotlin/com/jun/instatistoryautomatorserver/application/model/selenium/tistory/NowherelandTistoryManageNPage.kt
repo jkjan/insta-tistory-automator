@@ -35,6 +35,7 @@ class NowherelandTistoryManageNPage(
     @FindBy(xpath = "//*[@id='publish-layer-btn']")
     lateinit var buttonPublishLayer: WebElement
 
+    @ThrowWithMessage("로그인 에러", TistoryException::class)
     override fun setUp() {
         accountsKakaoLoginPage.login()
         super.setUp()

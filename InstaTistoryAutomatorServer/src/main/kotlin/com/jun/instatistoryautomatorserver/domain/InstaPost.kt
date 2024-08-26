@@ -31,4 +31,6 @@ class InstaPost(
     var mediaType: MediaType? = null,
 
     var fetchedTimestamp: OffsetDateTime? = null,
+
+    var tistoryFetched: Boolean? = null,
 )
