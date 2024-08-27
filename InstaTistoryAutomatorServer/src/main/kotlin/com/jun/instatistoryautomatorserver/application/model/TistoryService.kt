@@ -65,19 +65,11 @@ class TistoryService(
                 it.uploadTimestamp = OffsetDateTime.now()
                 it.tistoryUrl = url
                 it.uploadStatus = UploadStatus.UPLOADED
-
                 okUrls.add(url)
             } catch (e: TistoryUploadException) {
                 logger.error(e) { e.message }
                 it.uploadStatus = UploadStatus.FAILED
-
-                val failLog = TistoryUploadFailLog(
-                    tistoryId = it.id,
-                    reason = "${e.message} ${e.stackTraceToString().substring(0)}",
-                    retryTimestamp = OffsetDateTime.now(),
-                )
-
-                tistoryUploadFailLogRepository.save(failLog)
+                saveFailLog(it, e)
             }
 
             tistoryRepository.save(it)
@@ -138,6 +130,16 @@ class TistoryService(
         }
 
         return htmlContent
+    }
+
+    fun saveFailLog(tistoryPost: TistoryPost, exception: TistoryUploadException) {
+        val failLog = TistoryUploadFailLog(
+            tistoryId = tistoryPost.id,
+            reason = "${exception.message} ${exception.stackTraceToString()}",
+            retryTimestamp = OffsetDateTime.now(),
+        )
+
+        tistoryUploadFailLogRepository.save(failLog)
     }
 
     companion object {

@@ -10,6 +10,8 @@ import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchExcepti
 import com.jun.instatistoryautomatorserver.global.property.InstaProperty
 import com.jun.instatistoryautomatorserver.global.type.MediaType
 import jakarta.transaction.Transactional
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import retrofit2.Response
@@ -27,7 +29,13 @@ class InstaService(
     suspend fun fetchInstaPosts(): List<InstaPostResponseDTO> {
         val initialUrl = getInitialUrl()
 
-        val fetchedInstaPostResponse = getNewInstaPosts(initialUrl)
+        val fetchedInstaPostResponse =
+            coroutineScope {
+                async {
+                    getNewInstaPosts(initialUrl)
+                }.await()
+            }
+
         val instaPosts = fetchedInstaPostResponse.map { it.toNewInstaPost() }
 
         saveInstaPosts(instaPosts)
@@ -42,7 +50,7 @@ class InstaService(
         instaRepository.saveAll(instaPosts)
     }
 
-    private fun getInitialUrl(): String {
+    fun getInitialUrl(): String {
         val lastInstaTimestamp = getLastInstaTimestamp()
 
         with(instaProperty) {

@@ -56,7 +56,7 @@ class TistoryNewPostPage(
 
             driver.switchTo().defaultContent()
         } catch (e: TimeoutException) {
-            logger.info { "팝업 없음" }
+            logger.info(e) { "팝업 없음" }
             return
         }
     }

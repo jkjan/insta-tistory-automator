@@ -1,7 +1,7 @@
 package com.jun.instatistoryautomatorserver.insta
 
 import com.jun.instatistoryautomatorserver.adapter.`in`.InstaController
-import com.jun.instatistoryautomatorserver.domain.InstaPost
+import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.application.model.InstaService
 import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
 import kotlinx.coroutines.test.runTest
@@ -34,7 +34,7 @@ open class InstaControllerTest {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
 
-        val webMvcResult = webTestClient.get().uri("/api/v1/insta").exchange().expectBodyList(InstaPost::class.java).returnResult()
+        val webMvcResult = webTestClient.get().uri("/api/v1/insta").exchange().expectBodyList(InstaPostResponseDTO::class.java).returnResult()
 
         with(webMvcResult) {
             assertThat(status).isEqualTo(HttpStatus.OK)

@@ -18,12 +18,18 @@ class TistoryPostJPATest {
     @Test
     fun `tags 삽입`() {
         // given
-        val tistoryPost = TistoryPost(tags = "tag1|tag2|tag3")
+        val tistoryPost = TistoryPost(
+            instaId = "",
+            category = "",
+            title = "",
+            content = "",
+            tags = "tag1|tag2|tag3",
+        )
         val uploadedTistoryPost = tistoryRepository.save(tistoryPost)
 
         assertDoesNotThrow {
             val fetchedTistoryPost = tistoryRepository.findById(uploadedTistoryPost.id)
-            with(fetchedTistoryPost.get().tags!!.split("|")) {
+            with(fetchedTistoryPost.get().tags.split("|")) {
                 assertContains(this[0], "tag1")
                 assertContains(this[1], "tag2")
                 assertContains(this[2], "tag3")
