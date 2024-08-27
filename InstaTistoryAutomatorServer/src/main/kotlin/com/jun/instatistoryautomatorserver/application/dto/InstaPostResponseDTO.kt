@@ -7,26 +7,25 @@ import com.jun.instatistoryautomatorserver.global.type.MediaType
 import java.time.OffsetDateTime
 
 data class InstaPostResponseDTO(
-    val id: String,
+    var id: String?,
 
     @SerializedName("media_type")
-    val mediaType: MediaType,
+    var mediaType: MediaType?,
 
     @SerializedName("media_url")
-    val mediaUrl: String,
-    val caption: String,
-    val permalink: String,
-    val timestamp: String,
+    var mediaUrl: String?,
+    var caption: String?,
+    var permalink: String?,
+    var timestamp: String?,
 ) {
-    fun toNewInstaPost() =
+    fun toInstaPost() =
         InstaPost(
             instaId = id,
             mediaUrl = mediaUrl,
             permalink = permalink,
             caption = caption,
-            timestamp = OffsetDateTime.parse(timestamp.correct()),
+            timestamp = OffsetDateTime.parse(timestamp!!.correct()),
             mediaType = mediaType,
             fetchedTimestamp = OffsetDateTime.now(),
-            tistoryFetched = false,
         )
 }

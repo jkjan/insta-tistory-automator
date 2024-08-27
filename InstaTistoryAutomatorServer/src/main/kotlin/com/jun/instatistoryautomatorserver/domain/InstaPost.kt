@@ -1,7 +1,5 @@
 package com.jun.instatistoryautomatorserver.domain
 
-import com.jun.instatistoryautomatorserver.global.type.LARGE_TEXT_LENGTH
-import com.jun.instatistoryautomatorserver.global.type.MAX_URL_LENGTH
 import com.jun.instatistoryautomatorserver.global.type.MediaType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -16,24 +14,21 @@ import org.hibernate.type.SqlTypes
 class InstaPost(
     @Id
     @Column(nullable = false, length = 64)
-    var instaId: String,
+    var instaId: String? = null,
 
-    @Column(length = MAX_URL_LENGTH)
-    var mediaUrl: String,
+    @Column(length = 2083)
+    var mediaUrl: String? = null,
 
-    @Column(length = MAX_URL_LENGTH)
-    var permalink: String,
+    @Column(length = 2083)
+    var permalink: String? = null,
 
-    @Column(length = LARGE_TEXT_LENGTH)
-    var caption: String,
+    var caption: String? = null,
 
-    var timestamp: OffsetDateTime,
+    var timestamp: OffsetDateTime? = null,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    var mediaType: MediaType,
+    var mediaType: MediaType? = null,
 
     var fetchedTimestamp: OffsetDateTime? = null,
-
-    var tistoryFetched: Boolean = false,
 )

@@ -9,15 +9,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.mockito.kotlin.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
 import kotlin.test.Test
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 
-@WebFluxTest(InstaController::class)
+@WebMvcTest(InstaController::class)
 @Import(InstaTestConfig::class)
 @AutoConfigureWebTestClient
 @AutoConfigureWireMock(port = PORT)

@@ -2,7 +2,7 @@ package com.jun.instatistoryautomatorserver.insta
 
 import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
 import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchException
+import com.jun.instatistoryautomatorserver.global.exception.InstaException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,27 +22,27 @@ class InstaServiceTest {
     lateinit var instaService: InstaService
 
     @Test
-    fun `유효한 인스타 API 데이터 얻기 성공`() = runTest {
+    fun `유효한 인스타 API로 데이터 얻기 성공`() = runTest {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
-        val instaPosts = instaService.fetchInstaPosts()
+        val instaPosts = instaService.fetchInstaPost()
 
         assertThat(instaPosts).hasSize(6)
-        assertThat(instaPosts[0].id).isEqualTo("1")
-        assertThat(instaPosts[1].id).isEqualTo("2")
-        assertThat(instaPosts[2].id).isEqualTo("3")
-        assertThat(instaPosts[3].id).isEqualTo("4")
-        assertThat(instaPosts[4].id).isEqualTo("5")
-        assertThat(instaPosts[5].id).isEqualTo("6")
+        assertThat(instaPosts[0].instaId).isEqualTo("1")
+        assertThat(instaPosts[1].instaId).isEqualTo("2")
+        assertThat(instaPosts[2].instaId).isEqualTo("3")
+        assertThat(instaPosts[3].instaId).isEqualTo("4")
+        assertThat(instaPosts[4].instaId).isEqualTo("5")
+        assertThat(instaPosts[5].instaId).isEqualTo("6")
     }
 
     @Test
-    fun `유효하지 않은 인스타 API 데이터 얻기 실패, 예외 전파`() = runTest {
+    fun `유효하지 않은 인스타 API로 데이터 얻기 실패, 예외 전파`() = runTest {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-invalid-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
 
-        assertThrows<InstaApiFetchException> {
-            instaService.fetchInstaPosts()
+        assertThrows<InstaException> {
+            instaService.fetchInstaPost()
         }
     }
 
