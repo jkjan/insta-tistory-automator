@@ -1,15 +1,15 @@
 package com.jun.instatistoryautomatorserver.application.model
 
+import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.adapter.out.api.InstaApi
 import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
+import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
-import com.jun.instatistoryautomatorserver.global.exception.InstaException
+import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchException
 import com.jun.instatistoryautomatorserver.global.property.InstaProperty
-import io.github.oshai.kotlinlogging.KotlinLogging
+import com.jun.instatistoryautomatorserver.global.type.MediaType
 import jakarta.transaction.Transactional
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 import retrofit2.Response
@@ -24,23 +24,25 @@ class InstaService(
     private val instaApi: InstaApi,
 ) {
     @Transactional
-    @ThrowWithMessage("Instagram API 호출에 실패했습니다.", InstaException::class)
-    suspend fun fetchInstaPost(): List<InstaPost> {
+    suspend fun fetchInstaPosts(): List<InstaPostResponseDTO> {
         val initialUrl = getInitialUrl()
 
-        val fetchedInstaPosts =
-            coroutineScope {
-                async {
-                    getInstaPosts(initialUrl)
-                }.await()
-            }
+        val fetchedInstaPostResponse = getNewInstaPosts(initialUrl)
+        val instaPosts = fetchedInstaPostResponse.map { it.toNewInstaPost() }
 
-        instaRepository.saveAll(fetchedInstaPosts)
+        saveInstaPosts(instaPosts)
 
-        return fetchedInstaPosts
+        return fetchedInstaPostResponse
     }
 
-    fun getInitialUrl(): String {
+    fun getFetchedInstaPosts() =
+        instaRepository.findByTistoryFetched(tistoryFetched = false)
+
+    fun saveInstaPosts(instaPosts: List<InstaPost>) {
+        instaRepository.saveAll(instaPosts)
+    }
+
+    private fun getInitialUrl(): String {
         val lastInstaTimestamp = getLastInstaTimestamp()
 
         with(instaProperty) {
@@ -50,40 +52,35 @@ class InstaService(
         }
     }
 
-    fun getLastInstaTimestamp(): OffsetDateTime {
+    @ThrowWithMessage("Instagram API 호출에 실패했습니다.", InstaApiFetchException::class)
+    private fun getLastInstaTimestamp(): OffsetDateTime {
         val lastInstaPost = instaRepository.findFirstByOrderByTimestampDesc()
 
-        return if (lastInstaPost != null) {
-            lastInstaPost.timestamp!!
-        } else {
-            OffsetDateTime.parse(FIRST_BEER_POST_TIMESTAMP.correct(), DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        }
+        return lastInstaPost?.timestamp
+            ?: OffsetDateTime.parse(FIRST_BEER_POST_TIMESTAMP.correct(), DateTimeFormatter.ISO_OFFSET_DATE_TIME)
     }
 
-    suspend fun getInstaPosts(url: String): List<InstaPost> {
+    private suspend fun getNewInstaPosts(url: String): List<InstaPostResponseDTO> {
         logger.info { "인스타 API 요청: $url" }
         val instaResponseDTO = instaApi.getInstaPosts(url)
 
         if (instaResponseDTO.isOkAndHasBody()) {
             with(instaResponseDTO.body()!!) {
                 val nextInstaPosts = paging?.next?.let {
-                    getInstaPosts(it)
+                    getNewInstaPosts(it)
                 } ?: listOf()
 
-                val instaPostFromResponse = `data`.map {
-                    it.toInstaPost()
-                }.reversed()
+                val instaPostFromResponse = `data`.filter { it.mediaType != MediaType.VIDEO }.reversed()
 
                 return nextInstaPosts + instaPostFromResponse
             }
         } else {
-            throw InstaException("인스타 API 호출했으나 성공적이지 않음")
+            throw InstaApiFetchException("인스타 API 호출했으나 성공적이지 않음")
         }
     }
 
     companion object {
-        const val FIRST_BEER_POST_TIMESTAMP = "2024-06-20T12:00:53+0000"
-        val logger = KotlinLogging.logger {}
+        const val FIRST_BEER_POST_TIMESTAMP = "2024-08-25T12:00:53+0000"
 
         fun <T> Response<T>.isOkAndHasBody(): Boolean = this.isSuccessful && this.body() != null
 

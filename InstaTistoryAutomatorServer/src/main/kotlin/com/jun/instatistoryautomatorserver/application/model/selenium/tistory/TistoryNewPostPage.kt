@@ -3,8 +3,9 @@ package com.jun.instatistoryautomatorserver.application.model.selenium.tistory
 import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.application.model.selenium.BaseSeleniumPage
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
-import com.jun.instatistoryautomatorserver.global.exception.TistoryException
+import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadException
 import org.openqa.selenium.By
+import org.openqa.selenium.Keys
 import org.openqa.selenium.NotFoundException
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebElement
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Component
 
 // page_url = https://nowhereland.tistory.com/manage/newpost/
 @Component
-class NowherelandTistoryManageNPage(
+class TistoryNewPostPage(
     private val accountsKakaoLoginPage: AccountsKakaoLoginPage,
+    private val tistoryPostListPage: TistoryPostListPage,
 ) : BaseSeleniumPage() {
     @FindBy(xpath = "//*[@id='category-btn']")
     lateinit var buttonCategory: WebElement
@@ -35,12 +37,13 @@ class NowherelandTistoryManageNPage(
     @FindBy(xpath = "//*[@id='publish-layer-btn']")
     lateinit var buttonPublishLayer: WebElement
 
+    @ThrowWithMessage("로그인 에러", TistoryUploadException::class)
     override fun setUp() {
         accountsKakaoLoginPage.login()
         super.setUp()
     }
 
-    @ThrowWithMessage("팝업 에러", TistoryException::class)
+    @ThrowWithMessage("팝업 에러", TistoryUploadException::class)
     fun handlePopup(cancel: Boolean = true) {
         try {
             wait.until(ExpectedConditions.alertIsPresent())
@@ -53,12 +56,12 @@ class NowherelandTistoryManageNPage(
 
             driver.switchTo().defaultContent()
         } catch (e: TimeoutException) {
-            logger.info(e) { "팝업 없음" }
+            logger.info { "팝업 없음" }
             return
         }
     }
 
-    @ThrowWithMessage("카테고리 에러", TistoryException::class)
+    @ThrowWithMessage("카테고리 에러", TistoryUploadException::class)
     fun setCategory(targetCategory: String) {
         buttonCategory.clickWhenLoaded()
 
@@ -84,7 +87,7 @@ class NowherelandTistoryManageNPage(
         }
     }
 
-    @ThrowWithMessage("HTML 선택 에러", TistoryException::class)
+    @ThrowWithMessage("HTML 선택 에러", TistoryUploadException::class)
     fun setHTML() {
         buttonEditorModeLayerOpen.clickWhenLoaded()
 
@@ -94,12 +97,12 @@ class NowherelandTistoryManageNPage(
         handlePopup(false)
     }
 
-    @ThrowWithMessage("제목 설정 에러", TistoryException::class)
+    @ThrowWithMessage("제목 설정 에러", TistoryUploadException::class)
     fun setTitle(title: String) {
         textareaPostTitleInp.sendKeysWhenLoaded(title)
     }
 
-    @ThrowWithMessage("내용 설정 에러", TistoryException::class)
+    @ThrowWithMessage("내용 설정 에러", TistoryUploadException::class)
     fun setContent(content: String) {
         preCodeLine.clickWhenLoaded()
 
@@ -107,18 +110,23 @@ class NowherelandTistoryManageNPage(
         codeTextAreaLocator.sendKeysWhenLoaded(content)
     }
 
-    @ThrowWithMessage("태그 설정 에러", TistoryException::class)
+    @ThrowWithMessage("태그 설정 에러", TistoryUploadException::class)
     fun setTags(tags: List<String>) {
         tags.forEach { tag ->
             inputTagText.sendKeysWhenLoaded(tag)
+            inputTagText.sendKeys(Keys.RETURN)
         }
     }
 
-    @ThrowWithMessage("제출 에러", TistoryException::class)
-    fun submit() {
+    @ThrowWithMessage("제출 에러", TistoryUploadException::class)
+    fun submit(): String {
         buttonPublishLayer.clickWhenLoaded()
 
         val publishButtonLocator = By.xpath("//*[@id='publish-btn']")
         publishButtonLocator.clickWhenLoaded()
+
+        val newPostUrl = tistoryPostListPage.getFirstPostUrl()
+
+        return newPostUrl
     }
 }
