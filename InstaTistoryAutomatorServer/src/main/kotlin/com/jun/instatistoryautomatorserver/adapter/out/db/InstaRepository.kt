@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface InstaRepository : JpaRepository<InstaPost, String> {
     fun findFirstByOrderByTimestampDesc(): InstaPost?
+    fun findByTistoryFetched(tistoryFetched: Boolean): List<InstaPost>
 }
