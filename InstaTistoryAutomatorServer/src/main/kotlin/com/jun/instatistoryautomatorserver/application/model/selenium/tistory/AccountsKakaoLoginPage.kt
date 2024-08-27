@@ -3,7 +3,7 @@ package com.jun.instatistoryautomatorserver.application.model.selenium.tistory
 import com.jun.instatistoryautomatorserver.application.model.selenium.BaseSeleniumPage
 import com.jun.instatistoryautomatorserver.global.annotation.AfterSetUp
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
-import com.jun.instatistoryautomatorserver.global.exception.TistoryException
+import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadException
 import com.jun.instatistoryautomatorserver.global.property.TistoryProperty
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
@@ -28,7 +28,7 @@ class AccountsKakaoLoginPage(private val tistoryProperty: TistoryProperty, priva
     }
 
     @AfterSetUp
-    @ThrowWithMessage("로그인 에러", TistoryException::class)
+    @ThrowWithMessage("로그인 에러", TistoryUploadException::class)
     fun login() {
         inputLogin.sendKeysWhenLoaded(tistoryProperty.email)
         inputPassword.sendKeys(tistoryProperty.password)

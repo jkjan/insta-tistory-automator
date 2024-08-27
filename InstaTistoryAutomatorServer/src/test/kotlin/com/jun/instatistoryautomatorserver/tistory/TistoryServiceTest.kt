@@ -4,7 +4,7 @@ import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplicatio
 import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
 import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryRepository
 import com.jun.instatistoryautomatorserver.application.model.TistoryService
-import com.jun.instatistoryautomatorserver.application.model.selenium.tistory.NowherelandTistoryManageNPage
+import com.jun.instatistoryautomatorserver.application.model.selenium.tistory.TistoryNewPostPage
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ContextConfiguration(classes = [TistoryService::class])
 class TistoryServiceTest {
     @MockBean
-    lateinit var nowherelandTistoryManageNPage: NowherelandTistoryManageNPage
+    lateinit var tistoryNewPostPage: TistoryNewPostPage
 
     @MockBean
     lateinit var instaRepository: InstaRepository
@@ -43,7 +43,7 @@ class TistoryServiceTest {
             mediaUrl = "",
         )
 
-        val tistoryRequestDTO = tistoryService.convertToTistoryPost(instaPost)
+        val tistoryRequestDTO = tistoryService.parseInstaPost(instaPost)
         assertThat(tistoryRequestDTO.category).isEqualTo("diary")
         assertThat(tistoryRequestDTO.title).isEqualTo("this was a fantastic day")
         assertThat(tistoryRequestDTO.content).isEqualTo("hello I met kanye west and that was amazing.\nI hope you like kanye.\n")
@@ -62,7 +62,7 @@ class TistoryServiceTest {
         """.trimIndent()
 
         val imageUrl = "https://image.com/"
-        val htmlContent = tistoryService.getHtmlContent(content, imageUrl)
+        val htmlContent = tistoryService.toHtmlContent(content, imageUrl)
         logger.info { htmlContent }
 
         assertThat(htmlContent).isEqualTo("<img src=\"https://image.com/\"/><p></p><p>hello I met kanye west and that was amazing.</p><p></p><p>I hope you like kanye.</p><p></p>")

@@ -5,5 +5,5 @@ import com.jun.instatistoryautomatorserver.global.type.UploadStatus
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TistoryRepository : JpaRepository<TistoryPost, Int> {
-    fun findByUploadStatusNot(uploadStatus: UploadStatus): List<TistoryPost>
+    fun findFirstByUploadStatusNotOrderByFetchedTimestamp(uploadStatus: UploadStatus): List<TistoryPost>
 }

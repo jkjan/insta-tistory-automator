@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RestController
 class InstaController(private val instaService: InstaService) : BaseController() {
     @GetMapping
     suspend fun fetchInstaPosts(): ResponseEntity<List<InstaPostResponseDTO>> =
-        responseWithList(instaService.fetchInstaPost())
+        responseWithList(instaService.fetchInstaPosts())
 }

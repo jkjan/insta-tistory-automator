@@ -2,7 +2,7 @@ package com.jun.instatistoryautomatorserver.insta
 
 import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
 import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.global.exception.InstaException
+import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class InstaServiceTest {
     fun `유효한 인스타 API 데이터 얻기 성공`() = runTest {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
-        val instaPosts = instaService.fetchInstaPost()
+        val instaPosts = instaService.fetchInstaPosts()
 
         assertThat(instaPosts).hasSize(6)
         assertThat(instaPosts[0].id).isEqualTo("1")
@@ -41,8 +41,8 @@ class InstaServiceTest {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-invalid-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
 
-        assertThrows<InstaException> {
-            instaService.fetchInstaPost()
+        assertThrows<InstaApiFetchException> {
+            instaService.fetchInstaPosts()
         }
     }
 

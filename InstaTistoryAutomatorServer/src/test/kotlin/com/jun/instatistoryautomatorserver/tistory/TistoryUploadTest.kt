@@ -1,5 +1,6 @@
 package com.jun.instatistoryautomatorserver.tistory
 
+import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.application.model.TistoryService
 import com.jun.instatistoryautomatorserver.application.dto.TistoryRequestDTO
 import org.junit.jupiter.api.Disabled
@@ -27,6 +28,7 @@ class TistoryUploadTest {
             tags = listOf("tag1", "tag2", "tag3"),
         )
 
-        tistoryService.uploadTistoryPost(tistoryRequestDTO)
+        val testUrl = tistoryService.uploadTistoryPost(tistoryRequestDTO)
+        logger.info { testUrl }
     }
 }

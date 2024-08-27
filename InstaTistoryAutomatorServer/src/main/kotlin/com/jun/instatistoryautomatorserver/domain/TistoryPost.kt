@@ -1,5 +1,10 @@
 package com.jun.instatistoryautomatorserver.domain
 
+import com.jun.instatistoryautomatorserver.global.type.EXTRA_SMALL_TEXT_LENGTH
+import com.jun.instatistoryautomatorserver.global.type.LARGE_TEXT_LENGTH
+import com.jun.instatistoryautomatorserver.global.type.MAX_URL_LENGTH
+import com.jun.instatistoryautomatorserver.global.type.MIDDLE_TEXT_LENGTH
+import com.jun.instatistoryautomatorserver.global.type.SMALL_TEXT_LENGTH
 import com.jun.instatistoryautomatorserver.global.type.UploadStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -21,24 +26,25 @@ class TistoryPost(
     @Column(name = "tistory_id", nullable = false)
     var id: Int = 0,
 
-    @Column(name = "insta_id", length = 64)
-    var instaId: String? = null,
+    @Column(name = "insta_id", length = EXTRA_SMALL_TEXT_LENGTH)
+    var instaId: String,
 
     var uploadTimestamp: OffsetDateTime? = null,
 
-    @Column(length = 2083)
+    @Column(length = MAX_URL_LENGTH)
     var tistoryUrl: String? = null,
 
-    @Column(length = 256)
-    var title: String? = null,
+    @Column(length = SMALL_TEXT_LENGTH)
+    var title: String,
 
-    @Column(length = Integer.MAX_VALUE)
-    var content: String? = null,
+    @Column(length = LARGE_TEXT_LENGTH)
+    var content: String,
 
-    @Column(length = 256)
-    var category: String? = null,
+    @Column(length = SMALL_TEXT_LENGTH)
+    var category: String,
 
-    var tags: String? = null,
+    @Column(length = MIDDLE_TEXT_LENGTH)
+    var tags: String,
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)

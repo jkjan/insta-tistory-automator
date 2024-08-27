@@ -1,6 +1,6 @@
 package com.jun.instatistoryautomatorserver.global.exception
 
-class InstaException(
+class InstaApiFetchException(
     override val message: String? = null,
     override val cause: Throwable? = null,
 ) : RuntimeException()

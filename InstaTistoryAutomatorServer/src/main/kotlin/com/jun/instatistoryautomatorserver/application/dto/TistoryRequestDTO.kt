@@ -9,9 +9,9 @@ data class TistoryRequestDTO(
     val tags: List<String> = listOf(),
 ) {
     constructor(tistoryPost: TistoryPost) : this(
-        title = tistoryPost.title!!,
-        category = tistoryPost.category!!,
-        content = tistoryPost.content!!,
-        tags = tistoryPost.tags!!.split("|"),
+        title = tistoryPost.title,
+        category = tistoryPost.category,
+        content = tistoryPost.content,
+        tags = tistoryPost.tags.split("|"),
     )
 }
