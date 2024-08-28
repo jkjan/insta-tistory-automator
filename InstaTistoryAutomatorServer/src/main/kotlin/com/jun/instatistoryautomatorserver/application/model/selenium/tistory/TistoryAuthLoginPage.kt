@@ -14,7 +14,7 @@ class TistoryAuthLoginPage(private val tistoryProperty: TistoryProperty) : BaseS
     lateinit var linkLogin: WebElement
 
     override fun setUp() {
-        driver.get(tistoryProperty.entryUrl)
+        webDriverManager.getWebDriver().get(tistoryProperty.entryUrl)
         super.setUp()
     }
 

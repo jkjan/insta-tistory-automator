@@ -15,7 +15,7 @@ class TistoryPostListPage : BaseSeleniumPage() {
 
     @AfterSetUp
     fun getFirstPostUrl(): String {
-        wait.until(ExpectedConditions.elementToBeClickable(ulTestTitleNowhereMan))
+        webDriverManager.getWait().until(ExpectedConditions.elementToBeClickable(ulTestTitleNowhereMan))
         return ulTestTitleNowhereMan.getAttribute("href")
     }
 }

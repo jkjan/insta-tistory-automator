@@ -46,15 +46,15 @@ class TistoryNewPostPage(
     @ThrowWithMessage("팝업 에러", TistoryUploadException::class)
     fun handlePopup(cancel: Boolean = true) {
         try {
-            wait.until(ExpectedConditions.alertIsPresent())
+            webDriverManager.getWait().until(ExpectedConditions.alertIsPresent())
 
             if (cancel) {
-                driver.switchTo().alert()?.dismiss()
+                webDriverManager.getWebDriver().switchTo().alert()?.dismiss()
             } else {
-                driver.switchTo().alert()?.accept()
+                webDriverManager.getWebDriver().switchTo().alert()?.accept()
             }
 
-            driver.switchTo().defaultContent()
+            webDriverManager.getWebDriver().switchTo().defaultContent()
         } catch (e: TimeoutException) {
             logger.info(e) { "팝업 없음" }
             return
@@ -70,8 +70,8 @@ class TistoryNewPostPage(
         while (true) {
             try {
                 val categoryLocator = By.xpath("(//div[@id='category-list']//span)[${categoryIndex++}]")
-                wait.until(ExpectedConditions.presenceOfElementLocated(categoryLocator))
-                val category = driver.findElement(categoryLocator)
+                webDriverManager.getWait().until(ExpectedConditions.presenceOfElementLocated(categoryLocator))
+                val category = webDriverManager.getWebDriver().findElement(categoryLocator)
 
                 if (category.text.contains(targetCategory)) {
                     logger.info { "카테고리 번호: $categoryIndex, ${category.text} 으로 작성" }
@@ -126,6 +126,8 @@ class TistoryNewPostPage(
         publishButtonLocator.clickWhenLoaded()
 
         val newPostUrl = tistoryPostListPage.getFirstPostUrl()
+
+        webDriverManager.destroy()
 
         return newPostUrl
     }
