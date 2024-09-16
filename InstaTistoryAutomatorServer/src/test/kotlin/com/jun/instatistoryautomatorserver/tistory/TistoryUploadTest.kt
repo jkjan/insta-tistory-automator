@@ -13,12 +13,12 @@ import org.springframework.test.context.TestPropertySource
 @SpringBootTest
 @TestPropertySource(properties = ["webdriver.chrome-driver-path=src/main/resources/chromedriver"])
 @ActiveProfiles("test", "credentials")
+@Disabled
 class TistoryUploadTest {
     @Autowired
     lateinit var tistoryService: TistoryService
 
     @Test
-    @Disabled
     fun `유효한 글이 티스토리에 올라가야 함`() {
         // given
         val tistoryRequestDTO = TistoryRequestDTO(

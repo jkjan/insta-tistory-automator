@@ -14,7 +14,7 @@ class SetUpAspect {
     @Suppress("TooGenericExceptionCaught")
     fun setUp(joinPoint: JoinPoint, afterSetUp: AfterSetUp) {
         try {
-            logger.info { "initiated setup" }
+            logger.info { "initiated setup: ${joinPoint.target.javaClass.simpleName}" }
             joinPoint.target.javaClass.getMethod(afterSetUp.value).invoke(joinPoint.target)
         } catch (e: NoSuchMethodException) {
             logger.warn(e) { "Can't invoke ${afterSetUp.value}. No such method in a class ${joinPoint.target.javaClass.simpleName}" }

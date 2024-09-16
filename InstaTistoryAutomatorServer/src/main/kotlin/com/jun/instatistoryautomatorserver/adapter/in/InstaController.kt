@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/insta")
 class InstaController(private val instaService: InstaService) : BaseController() {
     @GetMapping
-    suspend fun fetchInstaPosts(): ResponseEntity<List<InstaPostResponseDTO>> =
+    fun fetchInstaPosts(): ResponseEntity<List<InstaPostResponseDTO>> =
         responseWithList(instaService.fetchInstaPosts())
 }

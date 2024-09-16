@@ -1,6 +1,6 @@
 package com.jun.instatistoryautomatorserver.application.dto
 
-import com.google.gson.annotations.SerializedName
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.jun.instatistoryautomatorserver.application.model.InstaService.Companion.correct
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.global.type.MediaType
@@ -9,10 +9,10 @@ import java.time.OffsetDateTime
 data class InstaPostResponseDTO(
     val id: String,
 
-    @SerializedName("media_type")
+    @JsonProperty("media_type")
     val mediaType: MediaType,
 
-    @SerializedName("media_url")
+    @JsonProperty("media_url")
     val mediaUrl: String,
     val caption: String,
     val permalink: String,

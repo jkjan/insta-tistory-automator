@@ -12,7 +12,10 @@ import org.springframework.stereotype.Component
 
 @Component
 @EnableConfigurationProperties(TistoryProperty::class)
-class AccountsKakaoLoginPage(private val tistoryProperty: TistoryProperty, private val tistoryAuthLoginPage: TistoryAuthLoginPage) : BaseSeleniumPage() {
+class AccountsKakaoLoginPage(
+    private val tistoryProperty: TistoryProperty,
+    private val tistoryAuthLoginPage: TistoryAuthLoginPage,
+) : BaseSeleniumPage() {
     @FindBy(xpath = "//*[@id='loginId--1']")
     lateinit var inputLogin: WebElement
 

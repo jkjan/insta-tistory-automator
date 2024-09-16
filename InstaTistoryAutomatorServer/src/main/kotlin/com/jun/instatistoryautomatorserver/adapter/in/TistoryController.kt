@@ -2,8 +2,6 @@ package com.jun.instatistoryautomatorserver.adapter.`in`
 
 import com.jun.instatistoryautomatorserver.application.dto.TistoryRequestDTO
 import com.jun.instatistoryautomatorserver.application.model.TistoryService
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,12 +16,8 @@ class TistoryController(private val tistoryService: TistoryService) : BaseContro
         responseWithList(tistoryService.fetchTistoryPosts())
 
     @GetMapping("/upload")
-    suspend fun uploadTistoryPosts(): ResponseEntity<String> {
-        coroutineScope {
-            launch {
-                responseWithList(tistoryService.uploadTistoryPosts())
-            }
-        }
+    fun uploadTistoryPosts(): ResponseEntity<String> {
+        responseWithList(tistoryService.uploadTistoryPosts())
 
         return ResponseEntity.status(HttpStatus.OK).body("잠깐만요!")
     }
