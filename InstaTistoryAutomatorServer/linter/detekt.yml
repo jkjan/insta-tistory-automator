@@ -11,6 +11,12 @@ output-reports:
     - 'TxtOutputReport'
     - 'XmlOutputReport'
 
+exceptions:
+  InstanceOfCheckForException:
+    active: false
+  TooGenericExceptionCaught:
+    active: false
+
 complexity:
   active: true
   ComplexCondition:
