@@ -2,8 +2,6 @@ package com.jun.instatistoryautomatorserver.insta
 
 import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
 import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchException
-import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -13,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.web.client.HttpClientErrorException
 
 @ExtendWith(SpringExtension::class)
 @AutoConfigureWireMock(port = PORT)
@@ -22,7 +21,7 @@ class InstaServiceTest {
     lateinit var instaService: InstaService
 
     @Test
-    fun `유효한 인스타 API 데이터 얻기 성공`() = runTest {
+    fun `유효한 인스타 API 데이터 얻기 성공`() {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
         val instaPosts = instaService.fetchInstaPosts()
@@ -37,11 +36,11 @@ class InstaServiceTest {
     }
 
     @Test
-    fun `유효하지 않은 인스타 API 데이터 얻기 실패, 예외 전파`() = runTest {
+    fun `유효하지 않은 인스타 API 데이터 얻기 실패, 예외 전파`() {
         val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-invalid-next-page"
         given(instaService.getInitialUrl()).willReturn(testUrl)
 
-        assertThrows<InstaApiFetchException> {
+        assertThrows<HttpClientErrorException> {
             instaService.fetchInstaPosts()
         }
     }

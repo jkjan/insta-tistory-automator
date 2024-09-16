@@ -113,8 +113,14 @@ class TistoryNewPostPage(
     @ThrowWithMessage("태그 설정 에러", TistoryUploadException::class)
     fun setTags(tags: List<String>) {
         tags.forEach { tag ->
-            inputTagText.sendKeysWhenLoaded(tag)
-            inputTagText.sendKeys(Keys.RETURN)
+            try {
+                inputTagText.sendKeysWhenLoaded(tag)
+                inputTagText.sendKeys(Keys.RETURN)
+            } catch (e: Exception) {
+                if (e !is TimeoutException && e !is NoSuchElementException) {
+                    throw e
+                }
+            }
         }
     }
 

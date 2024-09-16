@@ -14,8 +14,6 @@ import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadExcepti
 import com.jun.instatistoryautomatorserver.global.type.UploadStatus
 import jakarta.transaction.Transactional
 import java.time.OffsetDateTime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 
 @Service
@@ -47,10 +45,9 @@ class TistoryService(
     }
 
     @Transactional
-    suspend fun uploadTistoryPosts(): List<String> {
-        val tistoryPosts = withContext(Dispatchers.IO) {
+    fun uploadTistoryPosts(): List<String> {
+        val tistoryPosts =
             tistoryRepository.findFirstByUploadStatusNotOrderByFetchedTimestamp(UploadStatus.UPLOADED)
-        }
 
         val okUrls = mutableListOf<String>()
 

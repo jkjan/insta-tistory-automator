@@ -33,7 +33,6 @@ dependencies {
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -41,12 +40,12 @@ dependencies {
     // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.8.2")
+//    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.8.2")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.postgresql:postgresql")
 
     // Test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC.2")
+//    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
@@ -64,10 +63,10 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 
     // API
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
-    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0-RC.2")
+//    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+//    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
+//    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0-RC.2")
 }
 
 allOpen {

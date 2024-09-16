@@ -13,7 +13,7 @@ class InstaTistoryAutomatingController(
     private val instaTistoryAutomatingService: InstaTistoryAutomatingService,
 ) {
     @GetMapping
-    suspend fun fetchFromInstaAndUploadToTistory(): ResponseEntity<String> {
+    fun fetchFromInstaAndUploadToTistory(): ResponseEntity<String> {
         instaTistoryAutomatingService.fetchFromInstaAndUploadToTistory()
 
         return ResponseEntity

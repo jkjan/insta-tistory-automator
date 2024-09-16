@@ -1,44 +1,57 @@
 package com.jun.instatistoryautomatorserver.insta
 
+import com.google.gson.Gson
 import com.jun.instatistoryautomatorserver.adapter.`in`.InstaController
 import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
-import kotlinx.coroutines.test.runTest
+import com.jun.instatistoryautomatorserver.global.type.MediaType
 import org.assertj.core.api.Assertions.assertThat
 import org.mockito.kotlin.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.mock.mockito.SpyBean
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
-import org.springframework.test.web.reactive.server.WebTestClient
 import kotlin.test.Test
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 
-@WebFluxTest(InstaController::class)
-@Import(InstaTestConfig::class)
-@AutoConfigureWebTestClient
-@AutoConfigureWireMock(port = PORT)
+@WebMvcTest(InstaController::class)
 open class InstaControllerTest {
     @Autowired
-    private lateinit var webTestClient: WebTestClient
+    private lateinit var mockMvc: MockMvc
 
-    @SpyBean
+    @MockBean
     private lateinit var instaService: InstaService
 
     @Test
-    open fun `인스타 게시글 가져오는 API 성공`() = runTest {
+    open fun `인스타 게시글 가져오는 API 성공`() {
         // given
-        val testUrl = "http://localhost:$PORT/valid-insta-api-entry-with-next-page"
-        given(instaService.getInitialUrl()).willReturn(testUrl)
+        given(instaService.fetchInstaPosts()).willReturn(
+            listOf(
+                InstaPostResponseDTO(
+                    id = "test",
+                    mediaType = MediaType.IMAGE,
+                    mediaUrl = "https://test.com/",
+                    caption = "내용",
+                    permalink = "https://test.insta.com/",
+                    timestamp = "2024-09-08T17:27:04",
+                ),
+            ),
+        )
 
-        val webMvcResult = webTestClient.get().uri("/api/v1/insta").exchange().expectBodyList(InstaPostResponseDTO::class.java).returnResult()
+        // when
+        val response =
+            mockMvc.perform(
+                get("/api/v1/insta"),
+            ).andReturn()
+                .response
 
-        with(webMvcResult) {
-            assertThat(status).isEqualTo(HttpStatus.OK)
-            assertThat(responseBody).hasSize(6)
+        val body = Gson().fromJson(response.contentAsString, Array<InstaPostResponseDTO>::class.java)
+
+        // then
+        with(response) {
+            assertThat(status).isEqualTo(HttpStatus.OK.value())
+            assertThat(body).hasSize(1)
         }
     }
 }
