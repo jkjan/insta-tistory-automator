@@ -1,6 +1,5 @@
 package com.jun.instatistoryautomatorserver.application.model
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryRepository
 import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryUploadFailLogRepository
 import com.jun.instatistoryautomatorserver.application.dto.TistoryRequestDTO
@@ -12,6 +11,7 @@ import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
 import com.jun.instatistoryautomatorserver.global.exception.TistoryFetchException
 import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadException
 import com.jun.instatistoryautomatorserver.global.type.UploadStatus
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.transaction.Transactional
 import java.time.OffsetDateTime
 import org.springframework.stereotype.Service
@@ -70,6 +70,7 @@ class TistoryService(
             }
 
             tistoryRepository.save(it)
+            logger.info { "새 게시글: ${it.tistoryUrl}" }
         }
 
         logger.info { "${okUrls.size}개의 게시글을 업로드 했습니다." }
@@ -149,5 +150,7 @@ class TistoryService(
          */
         val captionRegex = Regex("\\[(.*)][\\s\\S]*<(.*)>\\s*([^#]*)\\s*((#[^#]*)*)")
         val contentRegex = Regex("(.*)")
+
+        val logger = KotlinLogging.logger { }
     }
 }

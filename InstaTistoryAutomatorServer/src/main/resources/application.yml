@@ -20,5 +20,9 @@ webdriver:
   timeout: 3
   chrome-driver-path: src/main/resources/chromedriver
   arguments:
-#    - --headless=new
+    - --headless=new
     - --lang=ko
+
+schedule:
+  cron:
+    insta-tistory-automator: 0 0 11 * * * # everyday 11:00 UTC (20:00 in KTC)

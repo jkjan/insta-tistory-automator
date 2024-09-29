@@ -1,6 +1,6 @@
 package com.jun.instatistoryautomatorserver.adapter.`in`
 
-import com.jun.instatistoryautomatorserver.application.model.InstaTistoryAutomatingService
+import com.jun.instatistoryautomatorserver.application.model.InstaTistoryAutomatorService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/automator")
 class InstaTistoryAutomatingController(
-    private val instaTistoryAutomatingService: InstaTistoryAutomatingService,
+    private val instaTistoryAutomatorService: InstaTistoryAutomatorService,
 ) {
     @GetMapping
     fun fetchFromInstaAndUploadToTistory(): ResponseEntity<String> {
-        instaTistoryAutomatingService.fetchFromInstaAndUploadToTistory()
+        instaTistoryAutomatorService.fetchFromInstaAndUploadToTistory()
 
         return ResponseEntity
             .status(HttpStatus.OK)

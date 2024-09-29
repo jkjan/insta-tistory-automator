@@ -1,9 +1,10 @@
 package com.jun.instatistoryautomatorserver.application.model.selenium.tistory
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.application.model.selenium.BaseSeleniumPage
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
 import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadException
+import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.math.min
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
 import org.openqa.selenium.NotFoundException
@@ -56,7 +57,7 @@ class TistoryNewPostPage(
 
             webDriverManager.getWebDriver().switchTo().defaultContent()
         } catch (e: TimeoutException) {
-            logger.info(e) { "팝업 없음" }
+            logger.info { "팝업 없음" }
             return
         }
     }
@@ -112,9 +113,9 @@ class TistoryNewPostPage(
 
     @ThrowWithMessage("태그 설정 에러", TistoryUploadException::class)
     fun setTags(tags: List<String>) {
-        tags.forEach { tag ->
+        for (i in 0..<min(tags.size, 10)) {
             try {
-                inputTagText.sendKeysWhenLoaded(tag)
+                inputTagText.sendKeysWhenLoaded(tags[i])
                 inputTagText.sendKeys(Keys.RETURN)
             } catch (e: Exception) {
                 if (e !is TimeoutException && e !is NoSuchElementException) {
@@ -136,5 +137,9 @@ class TistoryNewPostPage(
         webDriverManager.destroy()
 
         return newPostUrl
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger { }
     }
 }
