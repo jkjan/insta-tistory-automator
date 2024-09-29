@@ -25,4 +25,4 @@ webdriver:
 
 schedule:
   cron:
-    insta-tistory-automator: 0 * * * * * # everyday 11:00 UTC (20:00 in KTC)
+    insta-tistory-automator: 0 0 11 * * * # everyday 11:00 UTC (20:00 in KTC)

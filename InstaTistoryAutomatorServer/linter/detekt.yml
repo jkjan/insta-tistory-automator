@@ -16,6 +16,8 @@ exceptions:
     active: false
   TooGenericExceptionCaught:
     active: false
+  SwallowedException:
+    active: false
 
 complexity:
   active: true

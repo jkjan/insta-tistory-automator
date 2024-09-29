@@ -1,8 +1,8 @@
 package com.jun.instatistoryautomatorserver.tistory
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.application.model.TistoryService
 import com.jun.instatistoryautomatorserver.application.dto.TistoryRequestDTO
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,5 +30,9 @@ class TistoryUploadTest {
 
         val testUrl = tistoryService.uploadTistoryPost(tistoryRequestDTO)
         logger.info { testUrl }
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger { }
     }
 }

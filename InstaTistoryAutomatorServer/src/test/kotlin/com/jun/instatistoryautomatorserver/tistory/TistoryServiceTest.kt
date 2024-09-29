@@ -1,6 +1,5 @@
 package com.jun.instatistoryautomatorserver.tistory
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
 import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryRepository
 import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryUploadFailLogRepository
@@ -9,6 +8,7 @@ import com.jun.instatistoryautomatorserver.application.model.TistoryService
 import com.jun.instatistoryautomatorserver.application.model.selenium.tistory.TistoryNewPostPage
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.global.type.MediaType
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.OffsetDateTime
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
@@ -80,5 +80,9 @@ class TistoryServiceTest {
         logger.info { htmlContent }
 
         assertThat(htmlContent).isEqualTo("<img src=\"https://image.com/\" width=\"700\"/><br/><br/><p>hello I met kanye west and that was amazing.</p><p></p><p>I hope you like kanye.</p><p></p>")
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger { }
     }
 }

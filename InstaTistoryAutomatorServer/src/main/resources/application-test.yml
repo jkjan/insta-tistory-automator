@@ -15,3 +15,7 @@ webdriver:
   chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --lang=ko
+
+schedule:
+  cron:
+    insta-tistory-automator: 0 * * * * * # every minute
