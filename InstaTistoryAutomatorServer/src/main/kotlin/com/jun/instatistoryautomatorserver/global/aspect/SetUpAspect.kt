@@ -1,7 +1,7 @@
 package com.jun.instatistoryautomatorserver.global.aspect
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.global.annotation.AfterSetUp
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -21,5 +21,9 @@ class SetUpAspect {
         } catch (e: Exception) {
             logger.error(e) { "Error occurred during ${afterSetUp.value}." }
         }
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger { }
     }
 }

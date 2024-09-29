@@ -1,11 +1,11 @@
 package com.jun.instatistoryautomatorserver.adapter.out.api
 
-import com.jun.instatistoryautomatorserver.InstaTistoryAutomatorServerApplication.Companion.logger
 import com.jun.instatistoryautomatorserver.application.dto.InstaApiResponseDTO
 import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
 import com.jun.instatistoryautomatorserver.global.exception.InstaApiFetchException
 import com.jun.instatistoryautomatorserver.global.type.MediaType
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
 
 @Component
@@ -28,5 +28,9 @@ class InstaApi : BaseApi() {
         } else {
             return emptyList()
         }
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger { }
     }
 }

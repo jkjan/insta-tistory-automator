@@ -5,6 +5,7 @@ import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
 import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.global.property.InstaProperty
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.transaction.Transactional
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
@@ -27,6 +28,8 @@ class InstaService(
         val instaPosts = fetchedInstaPostResponse.map { it.toNewInstaPost() }
 
         saveInstaPosts(instaPosts)
+
+        logger.info { "${instaPosts.size} 개의 게시글을 찾았습니다." }
 
         return fetchedInstaPostResponse
     }
@@ -59,5 +62,7 @@ class InstaService(
         const val FIRST_BEER_POST_TIMESTAMP = "2024-08-25T12:00:53+0000"
 
         fun String.correct(): String = StringBuilder(this).apply { insert(22, ':') }.toString()
+
+        val logger = KotlinLogging.logger { }
     }
 }

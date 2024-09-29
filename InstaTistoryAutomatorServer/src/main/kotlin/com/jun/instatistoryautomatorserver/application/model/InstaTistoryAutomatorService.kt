@@ -4,7 +4,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
-class InstaTistoryAutomatingService(
+class InstaTistoryAutomatorService(
     private val instaService: InstaService,
     private val tistoryService: TistoryService,
 ) {
