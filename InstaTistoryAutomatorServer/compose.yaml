@@ -24,3 +24,4 @@ services:
       - ./src/main/resources/db/migration:/flyway/sql
     depends_on:
       - postgres
+    command: ["migrate"]
