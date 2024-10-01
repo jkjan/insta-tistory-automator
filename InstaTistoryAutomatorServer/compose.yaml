@@ -14,3 +14,13 @@ services:
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
       - ita-volume:/var/lib/postgresql/data
+  flyway:
+    image: flyway/flyway
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/insta_tistory_automator
+      FLYWAY_USER: test
+      FLYWAY_PASSWORD: test
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
