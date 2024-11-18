@@ -18,6 +18,18 @@ services:
     healthcheck:
       test: pg_isready -U postgres
 
+  flyway:
+    image: flyway/flyway
+    environment:
+      FLYWAY_URL: jdbc:postgresql://${db}:5432/${service_name}
+      FLYWAY_USER: test
+      FLYWAY_PASSWORD: test
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
+    command: [ "migrate" ]
+
   app:
     build:
       context: .
@@ -28,8 +40,7 @@ services:
         - SPRING_DATASOURCE_USERNAME=${username}
         - SPRING_DATASOURCE_PASSWORD=${password}
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     ports:
       - '3306:3306'
     container_name: ${service_name}-app
