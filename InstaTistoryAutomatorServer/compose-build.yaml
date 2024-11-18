@@ -1,0 +1,36 @@
+volumes:
+  ita-volume:
+
+services:
+  postgres:
+    image: 'postgres:16.2'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${service_name}
+      - POSTGRES_USER=${username}
+      - POSTGRES_PASSWORD=${password}
+      - TZ=Asia/Seoul
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - ita-volume:/var/lib/postgresql/data
+    container_name: ${service_name}-postgres
+    healthcheck:
+      test: pg_isready -U postgres
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://${db}:5432/${service_name}
+        - SPRING_PROFILES_ACTIVE=local
+        - SPRING_DATASOURCE_USERNAME=${username}
+        - SPRING_DATASOURCE_PASSWORD=${password}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '3306:3306'
+    container_name: ${service_name}-app
+

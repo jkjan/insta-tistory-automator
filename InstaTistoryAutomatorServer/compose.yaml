@@ -7,9 +7,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=insta_tistory_automator
-      - POSTGRES_USER=test
-      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=${service_name}
+      - POSTGRES_USER=${username}
+      - POSTGRES_PASSWORD=${password}
       - TZ=Asia/Seoul
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:

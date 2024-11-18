@@ -1,6 +1,9 @@
 spring:
   application:
     name: InstaTistoryAutomator
+  profiles:
+    group:
+      local: test, credentials
 
 insta:
   base-url: https://graph.instagram.com
