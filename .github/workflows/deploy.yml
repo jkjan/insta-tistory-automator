@@ -43,4 +43,4 @@ jobs:
         run: docker compose -f ./InstaTistoryAutomatorServer/compose.yaml  up --build -d
 
       - name: Build with Gradle Wrapper
-        run: ./InstaTistoryAutomatorServer/gradlew build -p ./InstaTistoryAutomatorServer
+        run: ./InstaTistoryAutomatorServer/gradlew build -p ./InstaTistoryAutomatorServer -i
