@@ -7,8 +7,6 @@ import com.jun.instatistoryautomatorserver.application.model.selenium.tistory.Ti
 import com.jun.instatistoryautomatorserver.domain.InstaPost
 import com.jun.instatistoryautomatorserver.domain.TistoryPost
 import com.jun.instatistoryautomatorserver.domain.TistoryUploadFailLog
-import com.jun.instatistoryautomatorserver.global.annotation.ThrowWithMessage
-import com.jun.instatistoryautomatorserver.global.exception.TistoryFetchException
 import com.jun.instatistoryautomatorserver.global.exception.TistoryUploadException
 import com.jun.instatistoryautomatorserver.global.type.UploadStatus
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -28,7 +26,7 @@ class TistoryService(
         val instaPosts = instaService.getFetchedInstaPosts()
         if (instaPosts.isEmpty()) return emptyList()
 
-        val tistoryPosts = instaPosts.map {
+        val tistoryPosts = instaPosts.mapNotNull {
             convertToTistoryPost(it)
         }
 
@@ -55,6 +53,8 @@ class TistoryService(
 
         tistoryPosts.forEach {
             try {
+                logger.info { "게시글을 업로드합니다.: ${it.title}" }
+
                 val url = uploadTistoryPost(
                     TistoryRequestDTO(it),
                 )
@@ -92,14 +92,17 @@ class TistoryService(
             }
         }
 
-    @ThrowWithMessage("인스타 -> 티스토리 변환 실패", TistoryFetchException::class)
-    fun convertToTistoryPost(instaPost: InstaPost): TistoryPost {
-        val tistoryPost = parseInstaPost(instaPost)
-        tistoryPost.apply {
-            content = toHtmlContent(content, instaPost.mediaUrl)
+    fun convertToTistoryPost(instaPost: InstaPost): TistoryPost? {
+        try {
+            val tistoryPost = parseInstaPost(instaPost)
+            tistoryPost.apply {
+                content = toHtmlContent(content, instaPost.mediaUrl)
+            }
+            return tistoryPost
+        } catch (e: Exception) {
+            logger.error(e) { "인스타 -> 티스토리 변환 실패" }
+            return null
         }
-
-        return tistoryPost
     }
 
     fun parseInstaPost(instaPost: InstaPost): TistoryPost {

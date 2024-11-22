@@ -111,16 +111,13 @@ class TistoryNewPostPage(
         codeTextAreaLocator.sendKeysWhenLoaded(content)
     }
 
-    @ThrowWithMessage("태그 설정 에러", TistoryUploadException::class)
     fun setTags(tags: List<String>) {
         for (i in 0..<min(tags.size, 10)) {
             try {
                 inputTagText.sendKeysWhenLoaded(tags[i])
                 inputTagText.sendKeys(Keys.RETURN)
             } catch (e: Exception) {
-                if (e !is TimeoutException && e !is NoSuchElementException) {
-                    throw e
-                }
+                logger.error(e) { "태그 설정 중 에러: ${tags[i]}" }
             }
         }
     }
