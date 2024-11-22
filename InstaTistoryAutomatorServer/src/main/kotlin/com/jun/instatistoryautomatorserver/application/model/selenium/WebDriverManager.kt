@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 @Component
 @EnableConfigurationProperties(WebDriverProperty::class)
 class WebDriverManager(private val webDriverProperty: WebDriverProperty) {
-    @Value("\${user.dir")
+    @Value("\${user.dir}")
     private lateinit var rootPath: String
 
     private var webDriver: WebDriver? = null
