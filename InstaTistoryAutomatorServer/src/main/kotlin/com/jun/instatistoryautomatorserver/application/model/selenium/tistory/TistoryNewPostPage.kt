@@ -90,7 +90,8 @@ class TistoryNewPostPage(
 
     @ThrowWithMessage("HTML 선택 에러", TistoryUploadException::class)
     fun setHTML() {
-        buttonEditorModeLayerOpen.clickWhenLoaded()
+        val editorMode = By.xpath("//*[@id='editor-mode-layer-btn-open']")
+        editorMode.clickWhenLoaded()
 
         val htmlSelector = By.xpath("//div[@id='editor-mode-html']")
         htmlSelector.clickWhenLoaded()

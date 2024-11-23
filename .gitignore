@@ -42,3 +42,6 @@ out/
 ### Token ###
 *token.txt
 application-credentials.yml
+
+chromedriver
+secret.env

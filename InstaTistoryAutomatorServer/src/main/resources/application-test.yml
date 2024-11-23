@@ -12,9 +12,9 @@ spring:
       ddl-auto: validate
 
 webdriver:
-  chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --lang=ko
+  remote-url: http://localhost:4444
 
 schedule:
   cron:
