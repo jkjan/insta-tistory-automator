@@ -1,0 +1,21 @@
+services:
+  selenium:
+    image: 'selenium/standalone-chrome:127.0.6533.99'
+    ports:
+      - "4444:4444"
+
+  spring-app:
+    build:
+      context: ..
+      dockerfile: cd/Dockerfile
+    environment:
+        - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+        - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+        - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        - INSTA_USER_TOKEN=${INSTA_USER_TOKEN}
+        - INSTA_USER_ID=${INSTA_USER_ID}
+        - TISTORY_EMAIL=${TISTORY_EMAIL}
+        - TISTORY_PASSWORD=${TISTORY_PASSWORD}
+        - WEBDRIVER_REMOTE_URL=http://selenium:4444
+    ports:
+      - '8080:8080'

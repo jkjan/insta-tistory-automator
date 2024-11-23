@@ -15,3 +15,8 @@ services:
       - PGDATA=/var/lib/postgresql/data
     volumes:
       - ita-volume:/var/lib/postgresql/data
+
+  selenium:
+    image: 'selenium/standalone-chrome:127.0.6533.99'
+    ports:
+      - "4444:4444"

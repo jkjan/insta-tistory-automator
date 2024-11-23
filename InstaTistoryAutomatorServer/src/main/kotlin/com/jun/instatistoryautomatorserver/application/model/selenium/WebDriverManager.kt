@@ -5,35 +5,36 @@ import com.jun.instatistoryautomatorserver.global.property.WebDriverProperty
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import java.io.File
-import java.io.FileOutputStream
+import java.net.URI
 import java.time.Duration
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeDriverService
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.Wait
 import org.openqa.selenium.support.ui.WebDriverWait
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 
 @Component
 @EnableConfigurationProperties(WebDriverProperty::class)
 class WebDriverManager(private val webDriverProperty: WebDriverProperty) {
-    @Value("\${user.dir}")
-    private lateinit var rootPath: String
-
     private var webDriver: WebDriver? = null
     private var wait: Wait<WebDriver>? = null
 
     @PostConstruct
     fun initialize() {
         try {
-            copyChromeDriverFile()
-            setWebDriver()
+            if (webDriverProperty.realChromeEnabled) {
+                setWebDriverWithChrome()
+            } else {
+                setWebDriverWithRemote()
+            }
+
+            wait = WebDriverWait(webDriver, Duration.ofSeconds(webDriverProperty.timeout))
         } catch (e: Exception) {
-            throw ChromeDriverNotFoundException("ChromeDriver가 없습니다.", e)
+            throw ChromeDriverNotFoundException("ChromeDriver 세팅에 실패했습니다.", e)
         }
     }
 
@@ -44,18 +45,8 @@ class WebDriverManager(private val webDriverProperty: WebDriverProperty) {
         wait = null
     }
 
-    fun copyChromeDriverFile() {
-        val chromeDriverInputStream = ClassPathResource("chromedriver").inputStream
-        val chromeDriverOutputStream = FileOutputStream("$rootPath/chromedriver-copy.exe")
-        chromeDriverInputStream.copyTo(chromeDriverOutputStream)
-        chromeDriverInputStream.close()
-        chromeDriverOutputStream.close()
-    }
-
-    fun setWebDriver() {
-        val chromeDriver = File("$rootPath/chromedriver-copy.exe")
-        chromeDriver.setExecutable(true)
-        chromeDriver.deleteOnExit()
+    fun setWebDriverWithChrome() {
+        val chromeDriver = File(webDriverProperty.chromeDriverPath)
 
         val chromeDriverService = ChromeDriverService.Builder().usingDriverExecutable(chromeDriver).build()
 
@@ -65,8 +56,15 @@ class WebDriverManager(private val webDriverProperty: WebDriverProperty) {
                 .addArguments(webDriverProperty.arguments)
                 .setExperimentalOption("excludeSwitches", listOf("disable-popup-blocking")),
         )
+    }
 
-        wait = WebDriverWait(webDriver, Duration.ofSeconds(webDriverProperty.timeout))
+    fun setWebDriverWithRemote() {
+        webDriver = RemoteWebDriver(
+            URI(webDriverProperty.remoteUrl).toURL(),
+            ChromeOptions()
+                .addArguments(webDriverProperty.arguments)
+                .setExperimentalOption("excludeSwitches", listOf("disable-popup-blocking")),
+        )
     }
 
     fun getWebDriver(): WebDriver {

@@ -3,7 +3,8 @@ spring:
     name: InstaTistoryAutomator
   profiles:
     group:
-      local: test, credentials
+      mock-test: test, credentials
+      local-test: test, credentials, local
 
 insta:
   base-url: https://graph.instagram.com
@@ -21,7 +22,6 @@ tistory:
 
 webdriver:
   timeout: 3
-  chrome-driver-path: src/main/resources/chromedriver
   arguments:
     - --headless=new
     - --lang=ko
