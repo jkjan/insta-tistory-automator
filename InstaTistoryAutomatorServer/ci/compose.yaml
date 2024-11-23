@@ -17,12 +17,20 @@ services:
     build:
       context: ..
       dockerfile: ci/Dockerfile
+    command: sh -c """
+      /app/gradlew --build-cache build -i && 
+      chmod -R 777 /root/.gradle && 
+      chmod -R 777 /app/build"""
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${db}:5432/${service_name}
       - SPRING_DATASOURCE_USERNAME=${username}
       - SPRING_DATASOURCE_PASSWORD=${password}
       - SPRING_PROFILES_ACTIVE=mock-test
       - WEBDRIVER_REMOTE_URL=http://selenium:4444
+      - INSTA_USER_TOKEN=${INSTA_USER_TOKEN}
+      - INSTA_USER_ID=${INSTA_USER_ID}
+      - TISTORY_EMAIL=${TISTORY_EMAIL}
+      - TISTORY_PASSWORD=${TISTORY_PASSWORD}
     volumes:
       - ../.gradle:/root/.gradle
       - ../build:/app/build
