@@ -89,6 +89,7 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    systemProperty("spring.profiles.active", "mock-test")
 }
 
 detekt {

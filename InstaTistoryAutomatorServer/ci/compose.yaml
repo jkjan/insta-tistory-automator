@@ -19,7 +19,6 @@ services:
       dockerfile: ci/Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${db}:5432/${service_name}
-      - SPRING_PROFILES_ACTIVE=mock-test
       - SPRING_DATASOURCE_USERNAME=${username}
       - SPRING_DATASOURCE_PASSWORD=${password}
       - WEBDRIVER_REMOTE_URL=http://selenium:4444
