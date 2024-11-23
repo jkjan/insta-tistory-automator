@@ -39,11 +39,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Test and build
-        run: docker compose -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+        run: docker compose -f ${{ inputs.name }}/ci/compose.yaml up --build --abort-on-container-exit --force-recreate
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Make a docker image
-        run: docker compose -f cd/compose.yaml build
+        run: docker compose -f ${{ inputs.name }}/cd/compose.yaml build
