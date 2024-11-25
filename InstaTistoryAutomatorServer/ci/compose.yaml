@@ -1,3 +1,6 @@
+# creates a testing environment and proceed tests and build
+# docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+
 services:
   postgresql:
     image: ${DB_IMAGE}

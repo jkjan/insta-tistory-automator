@@ -1,3 +1,6 @@
+# run server with selenium
+# docker compose --env-file=.env -f cd/compose.yaml up --detach --force-recreate && docker exec $SERVICE_NAME rm -f $SECRET_FILE
+
 services:
   selenium:
     image: ${SELENIUM_IMAGE}
@@ -6,6 +9,7 @@ services:
 
   spring-app:
     image: jun/${SERVICE_NAME}
+    container_name: ${SERVICE_NAME}
     environment:
       WEBDRIVER_REMOTE_URL: http://selenium:4444
     ports:

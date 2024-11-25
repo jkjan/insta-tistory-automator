@@ -1,26 +1,29 @@
+# build an image with secrets
+# docker build -f cd/Dockerfile -t jun/$SERVICE_NAME --secret id=BUILD_SECRET,src=secrets.json --progress=plain --no-cache .
+
 FROM alpine/java:21-jre
 WORKDIR /app
 
+ENV SPRING_RUNNER="spring_runner.sh"
+ENV SECRET_FILE="application-secrets.properties"
+
+COPY ../cd/$SPRING_RUNNER $SPRING_RUNNER
 COPY ../build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-ARG arguments
-
-RUN apk update
-RUN apk add jq
+RUN chmod +x $SPRING_RUNNER
 
 RUN --mount=type=secret,id=BUILD_SECRET \
-    arguments=$( cat "/run/secrets/BUILD_SECRET" \
+    apk --update add jq && \
+    cat "/run/secrets/BUILD_SECRET" \
         | jq -r 'to_entries[] | "\(.key)=\(.value)"' \
-        | while IFS=read -r line; \
+        | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
             value=$(echo "$line"| cut -d= -f2); \
-            echo "Setting $key"; \
-            echo "--$key=$value "; \
-          done)
+            echo -n "-D$key=$value "; \
+          done \
+    > $SECRET_FILE
 
-RUN echo $arguments
-
-ENTRYPOINT ["java", "-jar", "app.jar", "$arguments"]
+ENTRYPOINT ["sh", "-c", "./$SPRING_RUNNER $SECRET_FILE"]
