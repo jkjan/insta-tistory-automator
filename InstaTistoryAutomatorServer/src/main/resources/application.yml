@@ -3,8 +3,8 @@ spring:
     name: InstaTistoryAutomator
   profiles:
     group:
-      mock-test: test, credentials
-      local-test: test, credentials, local
+      mock-test: test
+      local-test: test, local
 
 insta:
   base-url: https://graph.instagram.com

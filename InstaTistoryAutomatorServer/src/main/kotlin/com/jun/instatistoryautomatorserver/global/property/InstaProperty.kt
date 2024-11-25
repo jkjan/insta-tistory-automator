@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class InstaProperty(
     val baseUrl: String,
     val apiVersion: String,
-    val userId: String,
-    val userToken: String,
+    val userId: String = "",
+    val userToken: String = "",
     val mediaFields: List<String>,
 )

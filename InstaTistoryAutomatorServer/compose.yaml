@@ -2,14 +2,14 @@ volumes:
   ita-volume:
 
 services:
-  postgres:
-    image: 'postgres:16.2'
+  postgresql:
+    image: ${DB_IMAGE}
     ports:
-      - "5432:5432"
+      - ${DB_PORT}:5432
     environment:
-      - POSTGRES_DB=${service_name}
-      - POSTGRES_USER=${username}
-      - POSTGRES_PASSWORD=${password}
+      - POSTGRES_DB=${SERVICE_NAME}
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - TZ=Asia/Seoul
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
       - PGDATA=/var/lib/postgresql/data
@@ -17,6 +17,6 @@ services:
       - ita-volume:/var/lib/postgresql/data
 
   selenium:
-    image: 'selenium/standalone-chrome:127.0.6533.99'
+    image: ${SELENIUM_IMAGE}
     ports:
-      - "4444:4444"
+      - ${SELENIUM_PORT}:4444

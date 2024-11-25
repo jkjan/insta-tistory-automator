@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -20,12 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      INSTA_USER_TOKEN: ${{ secrets.INSTA_USER_TOKEN }}
-      INSTA_USER_ID: ${{ secrets.INSTA_USER_ID }}
-      TISTORY_EMAIL: ${{ secrets.TISTORY_EMAIL }}
-      TISTORY_PASSWORD: ${{ secrets.TISTORY_PASSWORD }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,17 +20,26 @@ jobs:
           sparse-checkout: |
             ${{ inputs.name }}
 
+      - name: Change directory to the target directory
+        run: cd ${{ inputs.name }}
+
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Test and build
-        run: docker compose -f ${{ inputs.name }}/ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+      - name: Setup secrets
+        run: |
+          secrets=${{ toJson(secrets) }}
+          echo "$secrets" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
+            key=$(echo "$line" | cut -d= -f1)
+            value=$(echo "$line" | cut -d= -f2)
+            export "$key=$value"
+            echo "Exporting $key"
+          done
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Make a docker image
-        run: docker compose -f ${{ inputs.name }}/cd/compose.yaml build
+      - name: Gradle build
+        run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+
+      - name: Build docker image
+        run: docker compose --env-file=.env -f cd/compose.yaml build
