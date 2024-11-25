@@ -9,6 +9,10 @@ on:
         options:
           - InstaTistoryAutomatorServer
 
+env:
+  SERVICE_NAME: ${{ inputs.name }}
+  SECRET_FILE: "secret.txt"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,16 +34,10 @@ jobs:
 
       - name: Setup secrets
         run: |
-          secrets=${{ toJson(secrets) }}
-          echo "$secrets" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
-            key=$(echo "$line" | cut -d= -f1)
-            value=$(echo "$line" | cut -d= -f2)
-            export "$key=$value"
-            echo "Exporting $key"
-          done
+          echo "${{ toJson(secrets) }}" > secrets.json
 
       - name: Gradle build
         run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
 
       - name: Build docker image
-        run: docker compose --env-file=.env -f cd/compose.yaml build
+        run: docker build -f cd/Dockerfile -t jun/$SERVICE_NAME --secret id=BUILD_SECRET,src=secrets.json --progress=plain --no-cache .
