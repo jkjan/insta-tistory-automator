@@ -1,5 +1,9 @@
 name: Java CI with Gradle
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
@@ -7,15 +11,18 @@ on:
         type: choice
         description: What do you want to deploy?
         options:
-          - InstaTistoryAutomatorServer
+          - insta-tistory-automator-server
 
 env:
   SERVICE_NAME: ${{ inputs.name }}
-  SECRET_FILE: "secret.txt"
+  SECRET_FILE: "secret"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.name }}
 
     steps:
       - name: Checkout
@@ -24,20 +31,36 @@ jobs:
           sparse-checkout: |
             ${{ inputs.name }}
 
-      - name: Change directory to the target directory
-        run: cd ${{ inputs.name }}
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Gradle build
+        run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+
+      - name: Configure AWS Credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: 'sts.amazonaws.com'
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
 
       - name: Setup secrets
         run: |
           echo "${{ toJson(secrets) }}" > secrets.json
 
-      - name: Gradle build
-        run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
-
-      - name: Build docker image
-        run: docker build -f cd/Dockerfile -t jun/$SERVICE_NAME --secret id=BUILD_SECRET,src=secrets.json --progress=plain --no-cache .
+      - name: Build and push to ECR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          secret-files: BUILD_SECRET=./secrets.json
+          tags: ${{ secrets.ECR_HOST }}/$SERVICE_NAME:latest
+          cache-from: type=gha
+          cache-to: type=gha, mode=max

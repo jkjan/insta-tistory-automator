@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:${DB}://${DB}:${DB_PORT}/${SERVICE_NAME}
+    url: jdbc:${DB}://${DB}:${DB_PORT}/insta_tistory_automator_server
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 

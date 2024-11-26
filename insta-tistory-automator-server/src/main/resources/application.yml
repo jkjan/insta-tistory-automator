@@ -7,9 +7,9 @@ spring:
       local-test: test, local
 
 insta:
-  base-url: https://graph.instagram.com
-  api-version: v20.0
-  media-fields:
+  baseurl: https://graph.instagram.com
+  apiversion: v20.0
+  mediafields:
     - id
     - media_type
     - media_url

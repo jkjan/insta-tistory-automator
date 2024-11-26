@@ -44,4 +44,4 @@ out/
 application-credentials.yml
 
 chromedriver
-secret.env
+*secret*

@@ -21,9 +21,13 @@ RUN --mount=type=secret,id=BUILD_SECRET \
         | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
+            key=$(echo "$key" | sed 's/_/./g'); \
+            key=$(echo "$key" | tr "[:upper:]" "[:lower:]") \
             value=$(echo "$line"| cut -d= -f2); \
-            echo -n "-D$key=$value "; \
+            echo "$key=$value"; \
           done \
     > $SECRET_FILE
+
+RUN cat $SECRET_FILE
 
 ENTRYPOINT ["sh", "-c", "./$SPRING_RUNNER $SECRET_FILE"]

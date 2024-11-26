@@ -7,7 +7,7 @@ services:
     ports:
       - ${DB_PORT}:5432
     environment:
-      - POSTGRES_DB=${SERVICE_NAME}
+      - POSTGRES_DB=insta_tistory_automator_server
       - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
       - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - TZ=Asia/Seoul
