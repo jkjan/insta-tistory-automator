@@ -31,21 +31,16 @@ jobs:
           sparse-checkout: |
             ${{ inputs.name }}
 
-      - name: Gradle Caching
-        uses: actions/cache@v3
+      - uses: actions/setup-java@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'corretto' # See 'Supported distributions' for available options
+          java-version: '21'
 
       - name: Gradle build
         run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
 
       - name: Configure AWS Credentials@v4
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           audience: 'sts.amazonaws.com'
           aws-region: ${{ vars.AWS_REGION }}
