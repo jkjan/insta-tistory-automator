@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:${DB}://${DB}:${DB_PORT}/insta_tistory_automator_server
+    url: jdbc:${DB}://${DB}:${DB_PORT}/${SERVICE_NAME}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
@@ -14,7 +14,7 @@ spring:
 webdriver:
   arguments:
     - --lang=ko
-  remote-url: http://localhost:${SELENIUM_PORT}
+  remote-url: http://localhost:4444
 
 schedule:
   cron:
