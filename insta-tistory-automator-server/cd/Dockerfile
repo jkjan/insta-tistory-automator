@@ -20,8 +20,8 @@ RUN --mount=type=secret,id=$SECRETS_KEY\
           do \
             key=$(echo "$line" | cut -d= -f1); \
             value=$(echo "$line" | cut -d= -f2); \
-            echo "export $key=\"$value\"" >> $SECRETS_ENV; \
             echo "Successfully stored $key"; \
+            echo "export $key=\"$value\"" >> $SECRETS_ENV; \
           done
 
 ENTRYPOINT ["sh", "-c", "export $(cat $SECRETS_ENV | xargs) && java -jar app.jar"]
