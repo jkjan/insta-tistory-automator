@@ -61,12 +61,23 @@ jobs:
             ${{ inputs.name }}/.gradle
             ${{ inputs.name }}/build
 
+  push-to-ecr:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.name }}
+
+    steps:
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
         with:
           audience: 'sts.amazonaws.com'
           aws-region: ${{ vars.AWS_REGION }}
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+
+      - name: Login to Amazon ECR Private
+        uses: aws-actions/amazon-ecr-login@v2
+        id: login-ecr
 
       - name: Setup secrets
         run: |
