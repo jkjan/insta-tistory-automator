@@ -77,8 +77,10 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: temp debugging jq
+        env:
+          SECRETS_JSON: ${{ toJson(secrets) }}
         run: |
-          docker build -f cd/Dockerfile -t jun/${{ env.SERVICE_NAME }} --secret id=${{ env.SECRETS_KEY }},src=secrets.json --progress=plain --no-cache .
+          docker build -f cd/Dockerfile -t jun/${{ env.SERVICE_NAME }} --secret id=${{ env.SECRETS_KEY }},env=${{ env.SECRETS_JSON }} --progress=plain --no-cache .
 
       - name: Build and push to ECR
         uses: docker/build-push-action@v6
