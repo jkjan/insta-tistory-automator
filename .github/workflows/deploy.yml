@@ -91,6 +91,7 @@ jobs:
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha, mode=max
+          provenance: false
 
       - name: Clean up
         if: always()
