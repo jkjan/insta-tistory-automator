@@ -12,6 +12,9 @@ on:
         description: What do you want to deploy?
         options:
           - insta-tistory-automator-server
+      cache:
+        type: boolean
+        description: Enable cache?
 
 env:
   SERVICE_NAME: ${{ inputs.name }}
@@ -35,6 +38,7 @@ jobs:
       - name: Restore gradle cache if exists
         id: cache-gradle
         uses: actions/cache/restore@v4
+        if: ${{ inputs.cache }}
         with:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           path: |
