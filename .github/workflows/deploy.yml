@@ -32,19 +32,29 @@ jobs:
           sparse-checkout: |
             ${{ inputs.name }}
 
-      - uses: actions/cache@v4
-        if: always()
+      - name: Restore gradle cache if exists
+        id: cache-gradle
+        uses: actions/cache/restore@v4
         with:
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           path: |
             ./.gradle
             ./build
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}
             gradle-
 
       - name: Gradle build
         run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+
+      - name: Save gradle cache
+        if: always() && steps.cache-gradle.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ steps.cache-gradle.outputs.cache-primary-key }}
+          path: |
+            ./.gradle
+            ./build
 
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
@@ -65,7 +75,8 @@ jobs:
       - name: Build and push to ECR
         uses: docker/build-push-action@v6
         with:
-          context: ${{ inputs.name }}/cd
+          context: ${{ inputs.name }}
+          file: ${{ inputs.name }}/cd/Dockerfile
           push: true
           secret-files: ${{ env.SECRETS_KEY }}=${{ inputs.name }}/${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
@@ -75,4 +86,4 @@ jobs:
       - name: Clean up
         if: always()
         run: |
-          rm -f ${{ env.SECRET_FILE }}
+          rm -f ${{ env.SECRETS_FILE }}
