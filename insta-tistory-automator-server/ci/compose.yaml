@@ -7,7 +7,7 @@ services:
     ports:
       - ${DB_PORT}:5432
     environment:
-      - POSTGRES_DB=insta_tistory_automator_server
+      - POSTGRES_DB=${SERVICE_NAME}
       - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
       - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 
@@ -28,7 +28,7 @@ services:
       chmod -R 777 /app/build
       """
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:${DB}://${DB}:${DB_PORT}/insta_tistory_automator_server
+      - SPRING_DATASOURCE_URL=jdbc:${DB}://${DB}:${DB_PORT}/${SERVICE_NAME}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_PROFILES_ACTIVE=mock-test

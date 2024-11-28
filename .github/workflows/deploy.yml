@@ -15,7 +15,8 @@ on:
 
 env:
   SERVICE_NAME: ${{ inputs.name }}
-  SECRET_FILE: "secret"
+  SECRETS_KEY: "SECRETS_JSON"
+  SECRETS_FILE: "secrets.json"
 
 jobs:
   build:
@@ -31,10 +32,15 @@ jobs:
           sparse-checkout: |
             ${{ inputs.name }}
 
-      - uses: actions/setup-java@v4
+      - uses: actions/cache@v4
         with:
-          distribution: 'corretto' # See 'Supported distributions' for available options
-          java-version: '21'
+          path: |
+            ./.gradle
+            ./build
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}
+            gradle-
 
       - name: Gradle build
         run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
@@ -48,7 +54,7 @@ jobs:
 
       - name: Setup secrets
         run: |
-          echo "${{ toJson(secrets) }}" > secrets.json
+          echo "${{ toJson(secrets) }}" >> ${{ env.SECRETS_FILE }}
 
       - name: Setup docker buildx
         id: buildx
@@ -59,7 +65,12 @@ jobs:
         with:
           context: .
           push: true
-          secret-files: BUILD_SECRET=./secrets.json
-          tags: ${{ secrets.ECR_HOST }}/$SERVICE_NAME:latest
+          secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
+          tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha, mode=max
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -f ${{ env.SECRET_FILE }}

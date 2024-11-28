@@ -1,5 +1,5 @@
 # run server with selenium
-# docker compose --env-file=.env -f cd/compose.yaml up --detach --force-recreate && docker exec $SERVICE_NAME rm -f $SECRET_FILE
+# docker compose --env-file=.env -f cd/compose.yaml up --force-recreate --abort-on-container-exit
 
 services:
   selenium:

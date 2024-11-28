@@ -12,7 +12,7 @@ import org.springframework.scheduling.support.CronTrigger
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties(ScheduleProperty::class)
-class ScheduleConfig(
+class ScheduleConfiguration(
     private val properties: ScheduleProperty,
     private val instaTistoryAutomatorService: InstaTistoryAutomatorService,
 ) : SchedulingConfigurer {
@@ -24,6 +24,6 @@ class ScheduleConfig(
     }
 
     companion object {
-        const val INSTA_TISTORY_AUTOMATOR = "insta-tistory-automator"
+        const val INSTA_TISTORY_AUTOMATOR = "insta-tistory-automator-server"
     }
 }
