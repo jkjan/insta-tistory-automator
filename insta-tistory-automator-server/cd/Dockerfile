@@ -11,10 +11,10 @@ EXPOSE 8080
 ENV SECRETS_KEY="SECRETS_JSON"
 ENV SECRETS_ENV="secrets.env"
 
-RUN --mount=type=secret,id=$SECRETS_KEY,env=SECRETS \
+RUN --mount=type=secret,id=$SECRETS_KEY \
     touch $SECRETS_ENV && \
     apk --update add jq && \
-    echo $SECRETS \
+    cat /run/secrets/$SECRETS_KEY \
         | jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' \
         | while IFS= read -r line; \
           do \

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: InstaTistoryAutomator
+    name: insta-tistory-automator-server
   profiles:
     group:
       mock-test: test
