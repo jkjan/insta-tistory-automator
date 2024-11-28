@@ -15,7 +15,7 @@ RUN --mount=type=secret,id=$SECRETS_KEY\
     touch $SECRETS_ENV && \
     apk --update add jq && \
     cat /run/secrets/$SECRETS_KEY \
-        | jq -r 'to_entries[] | "\(.key)=\(.value)"' \
+        | jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' \
         | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
