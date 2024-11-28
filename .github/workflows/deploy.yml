@@ -43,8 +43,8 @@ jobs:
         with:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           path: |
-            ./.gradle
-            ./build
+            ${{ inputs.name }}/.gradle
+            ${{ inputs.name }}/build
           restore-keys: |
             gradle-${{ runner.os }}
             gradle-
@@ -58,8 +58,8 @@ jobs:
         with:
           key: ${{ steps.cache-gradle.outputs.cache-primary-key }}
           path: |
-            ./.gradle
-            ./build
+            ${{ inputs.name }}/.gradle
+            ${{ inputs.name }}/build
 
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
