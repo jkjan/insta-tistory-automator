@@ -15,6 +15,7 @@ on:
       cache:
         type: boolean
         description: Enable cache?
+        default: true
 
 env:
   SERVICE_NAME: ${{ inputs.name }}
