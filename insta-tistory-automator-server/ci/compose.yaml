@@ -19,7 +19,7 @@ services:
   spring-app:
     build:
       context: ..
-      dockerfile: ci/Dockerfile
+      dockerfile: Dockerfile
     image: jun/${SERVICE_NAME}-builder
     container_name: ${SERVICE_NAME}-builder
     command: sh -c """
