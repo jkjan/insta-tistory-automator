@@ -21,23 +21,34 @@ env:
   SERVICE_NAME: ${{ inputs.name }}
   SECRETS_KEY: "SECRETS_JSON"
   SECRETS_FILE: "secrets.json"
+  SERVER_DIR: server/${{ inputs.name }}
 
 jobs:
-  build:
+  build-gradle:
     runs-on: ubuntu-latest
-    env:
-      SERVER_DIR: server/${{ inputs.name }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            module
+            ${{ env.SERVER_DIR }}
 
-      - name: Setup Java
+      - name: Setup Java with gradle cache
         uses: 'actions/setup-java@v4'
+        if: ${{ inputs.cache }}
         with:
           distribution: 'corretto'
           java-version: '21'
           cache: 'gradle'
+
+      - name: Setup Java without gradle cache
+        uses: 'actions/setup-java@v4'
+        if: ${{ !inputs.cache }}
+        with:
+          distribution: 'corretto'
+          java-version: '21'
 
       - name: Gradle build
         run: |
@@ -45,6 +56,11 @@ jobs:
           ./gradlew -p ${{ env.SERVER_DIR }} --build-cache build -i     
           docker compose --env-file=${{ env.SERVER_DIR }}/.env -f ${{ env.SERVER_DIR }}/ci/compose.yaml down --remove-orphans
 
+  push-to-ecr:
+    runs-on: ubuntu-latest
+    needs: build-gradle
+
+    steps:
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -56,12 +72,12 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
 
+      - name: Setup secret
+        run: echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
+
       - name: Setup docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Setup secret
-        run: echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
 
       - name: Build and push to ECR
         uses: docker/build-push-action@v6
