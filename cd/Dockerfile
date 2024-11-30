@@ -17,16 +17,14 @@ ENV SECRETS_ENV="secrets.env"
 
 RUN --mount=type=secret,id=$SECRETS_FILE_ID \
     touch $SECRETS_ENV && \
-    apk --update add jq && \
+    apk --update add yq && \
     cat /run/secrets/$SECRETS_FILE_ID \
-    | sed -E 's/([a-zA-Z0-9_]+)(:)/"\1"\2/' \
-    | sed -E 's/([:][ ]*)([^,]+)/\1"\2"/' \
-        | jq -r 'to_entries[] | select(.key != null and .value != null) | "\(.key)=\(.value | tostring | @sh)"' \
+        | yq -r 'to_entries[] | select(.key != null and .value != null) | "\(.key)=\(.value | tostring | @sh)"' \
         | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
             value=$(echo "$line" | cut -d= -f2); \
-            echo "Successfully stored $key -> $value"; \
+            echo "Successfully stored $key"; \
             echo "export $key=\"$value\"" >> $SECRETS_ENV; \
           done
 
