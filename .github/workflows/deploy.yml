@@ -32,31 +32,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Restore gradle cache if exists
-        id: cache-gradle
-        uses: actions/cache/restore@v4
-        if: ${{ inputs.cache }}
+      - name: Setup Java
+        uses: 'actions/setup-java@v4'
         with:
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          path: |
-            .gradle
-          restore-keys: |
-            gradle-${{ runner.os }}
-            gradle-
+          distribution: 'corretto'
+          java-version: '21'
+          cache: 'gradle'
 
       - name: Gradle build
         run: |
           docker compose --env-file=${{ env.SERVER_DIR }}/.env -f ${{ env.SERVER_DIR }}/ci/compose.yaml up --detach --force-recreate
           ./gradlew -p ${{ env.SERVER_DIR }} --build-cache build -i     
           docker compose --env-file=${{ env.SERVER_DIR }}/.env -f ${{ env.SERVER_DIR }}/ci/compose.yaml down --remove-orphans
-
-      - name: Save gradle cache
-        if: always() && steps.cache-gradle.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          key: ${{ steps.cache-gradle.outputs.cache-primary-key }}
-          path: |
-            .gradle
 
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
