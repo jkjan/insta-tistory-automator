@@ -18,6 +18,7 @@ ENV SECRETS_ENV="secrets.env"
 RUN --mount=type=secret,id=$SECRETS_FILE_ID \
     touch $SECRETS_ENV && \
     apk --update add jq && \
+    cat /run/secrets/$SECRETS_FILE_ID && \
     cat /run/secrets/$SECRETS_FILE_ID \
         | jq -r 'to_entries[] | "\(.key)=\(.value | @sh)"' \
         | while IFS= read -r line; \
