@@ -1,7 +1,7 @@
 # build an image with secrets
 # docker build -f cd/Dockerfile -t jun/$SERVICE_NAME --secret id=$SECRETS_JSON,src=secrets.json .
 
-FROM alpine/java:21-jre
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 ARG SERVER_DIR_ARG="."
