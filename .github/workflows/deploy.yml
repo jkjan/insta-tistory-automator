@@ -30,10 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            module
-            ${{ env.SERVER_DIR }}
 
       - name: Setup Java with gradle cache
         uses: 'actions/setup-java@v4'
