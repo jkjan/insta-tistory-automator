@@ -86,7 +86,8 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push to ECR
+      - name: Build and push to ECR with cache
+        if: ${{ inputs.cache }}
         uses: docker/build-push-action@v6
         with:
           file: cd/Dockerfile
@@ -95,6 +96,16 @@ jobs:
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha, mode=max
+          provenance: false
+
+      - name: Build and push to ECR without cache
+        if: ${{ !inputs.cache }}
+        uses: docker/build-push-action@v6
+        with:
+          file: cd/Dockerfile
+          push: true
+          secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
+          tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           provenance: false
 
       - name: Clean up
