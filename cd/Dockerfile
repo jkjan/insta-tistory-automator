@@ -4,11 +4,11 @@
 FROM alpine/java:21-jre
 WORKDIR /app
 
-ARG SERVER_DIR_ARG
+ARG SERVER_DIR_ARG="."
 
 ENV SERVER_DIR=$SERVER_DIR_ARG
 
-COPY $SERVER_DIR/build/libs/*.jar app.jar
+COPY $SERVER_DIR/*.jar app.jar
 COPY cd/spring_runner.sh spring_runner.sh
 
 EXPOSE 8080
