@@ -1,13 +1,13 @@
-package com.jun.instatistoryautomatorserver.tistory
+package tistory
 
-import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryRepository
-import com.jun.instatistoryautomatorserver.domain.TistoryPost
 import kotlin.test.Test
 import kotlin.test.assertContains
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import tistory.adapter.out.db.TistoryRepository
+import tistory.domain.TistoryPost
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

@@ -1,7 +1,7 @@
-package com.jun.instatistoryautomatorserver.insta
+package insta
 
-import com.jun.instatistoryautomatorserver.insta.InstaServiceTest.Companion.PORT
-import com.jun.instatistoryautomatorserver.application.model.InstaService
+import insta.InstaServiceTest.Companion.PORT
+import insta.application.model.InstaService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

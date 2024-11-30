@@ -107,4 +107,9 @@ subprojects {
             println("Root directory: ${project.rootDir}")
         }
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        systemProperty("spring.profiles.active", "mock-test")
+    }
 }

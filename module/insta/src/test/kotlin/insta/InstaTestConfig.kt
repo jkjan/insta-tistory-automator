@@ -1,9 +1,9 @@
-package com.jun.instatistoryautomatorserver.insta
+package insta
 
-import com.jun.instatistoryautomatorserver.adapter.out.api.InstaApi
-import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
-import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.global.property.InstaProperty
+import insta.adapter.out.api.InstaApi
+import insta.adapter.out.db.InstaRepository
+import insta.application.model.InstaService
+import insta.global.property.InstaProperty
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.EnableAspectJAutoProxy

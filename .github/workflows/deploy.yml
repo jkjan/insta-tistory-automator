@@ -25,16 +25,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.name }}
+    env:
+      SERVER_DIR: server/${{ inputs.name }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            ${{ inputs.name }}
 
       - name: Restore gradle cache if exists
         id: cache-gradle
@@ -43,14 +39,16 @@ jobs:
         with:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           path: |
-            ${{ inputs.name }}/.gradle
-            ${{ inputs.name }}/build
+            .gradle
           restore-keys: |
             gradle-${{ runner.os }}
             gradle-
 
       - name: Gradle build
-        run: docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+        run: |
+          docker compose --env-file=${{ env.SERVER_DIR }}/.env -f ${{ env.SERVER_DIR }}/ci/compose.yaml up --detach --force-recreate
+          ./gradlew -p ${{ env.SERVER_DIR }} --build-cache build -i     
+          docker compose --env-file=${{ env.SERVER_DIR }}/.env -f ${{ env.SERVER_DIR }}/ci/compose.yaml down --remove-orphans
 
       - name: Save gradle cache
         if: always() && steps.cache-gradle.outputs.cache-hit != 'true'
@@ -58,8 +56,7 @@ jobs:
         with:
           key: ${{ steps.cache-gradle.outputs.cache-primary-key }}
           path: |
-            ${{ inputs.name }}/.gradle
-            ${{ inputs.name }}/build
+            .gradle
 
       - name: Configure AWS Credentials@v4
         uses: aws-actions/configure-aws-credentials@v3
@@ -83,12 +80,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.name }}
-          file: ${{ inputs.name }}/cd/Dockerfile
+          file: cd/Dockerfile
           push: true
-          secret-files: ${{ env.SECRETS_KEY }}=${{ inputs.name }}/${{ env.SECRETS_FILE }}
+          secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha, mode=max
+          build-args: SERVER_DIR_ARG=${{ env.SERVER_DIR }}
           provenance: false
 
       - name: Clean up

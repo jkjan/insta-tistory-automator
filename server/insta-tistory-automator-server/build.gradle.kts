@@ -4,6 +4,7 @@ tasks {
     named<BootJar>("bootJar") {
         enabled = true
     }
+
     named<Jar>("jar") {
         enabled = false
     }
@@ -17,9 +18,4 @@ dependencies {
     // 기타
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-    systemProperty("spring.profiles.active", "mock-test")
 }

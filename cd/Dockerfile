@@ -4,7 +4,12 @@
 FROM alpine/java:21-jre
 WORKDIR /app
 
-COPY ../build/libs/*.jar app.jar
+ARG SERVER_DIR_ARG
+
+ENV SERVER_DIR=$SERVER_DIR_ARG
+
+COPY $SERVER_DIR/build/libs/*.jar app.jar
+COPY cd/spring_runner.sh spring_runner.sh
 
 EXPOSE 8080
 
@@ -15,13 +20,13 @@ RUN --mount=type=secret,id=$SECRETS_KEY \
     touch $SECRETS_ENV && \
     apk --update add jq && \
     cat /run/secrets/$SECRETS_KEY \
-        | jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' \
+        | jq -r 'to_entries[] | "\(.key)=\(.value)"' \
         | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
             value=$(echo "$line" | cut -d= -f2); \
             echo "Successfully stored $key"; \
-            echo "export $key=\"$value\"" >> $SECRETS_ENV; \
+            echo "$key=\"$value\"" >> $SECRETS_ENV; \
           done
 
-ENTRYPOINT ["sh", "-c", "export $(cat $SECRETS_ENV | xargs) && java -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "sh spring_runner.sh ./$SECRETS_ENV && java -jar app.jar"]

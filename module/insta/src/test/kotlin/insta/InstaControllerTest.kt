@@ -1,10 +1,10 @@
-package com.jun.instatistoryautomatorserver.insta
+package insta
 
 import com.google.gson.Gson
-import com.jun.instatistoryautomatorserver.adapter.`in`.InstaController
-import com.jun.instatistoryautomatorserver.application.dto.InstaPostResponseDTO
-import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.global.type.MediaType
+import insta.adapter.`in`.InstaController
+import insta.application.dto.InstaPostResponseDTO
+import insta.application.model.InstaService
+import insta.global.type.MediaType
 import org.assertj.core.api.Assertions.assertThat
 import org.mockito.kotlin.given
 import org.springframework.beans.factory.annotation.Autowired

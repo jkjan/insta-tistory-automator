@@ -1,6 +1,19 @@
 #!/bin/sh
-secret_file_name=$1
 
-echo "Loading secrets from '$secret_file_name'. Make sure it's deleted after run."
+env_file=$1
 
-java -Dspring.config.import=file:$secret_file_name -jar app.jar
+while IFS= read -r line; do
+  # 빈 줄 및 주석(#) 무시
+  if [[ -z "$line" || "$line" == \#* ]]; then
+    continue
+  fi
+  key=$(echo "$line" | cut -d= -f1);
+  value=$(echo "$line" | cut -d= -f2);
+
+  # 한 줄 실행
+  echo $key
+  export $key=$value
+
+done < "$env_file"
+
+printenv

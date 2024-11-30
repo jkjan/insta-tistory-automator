@@ -1,13 +1,9 @@
-package com.jun.instatistoryautomatorserver.tistory
+package tistory
 
-import com.jun.instatistoryautomatorserver.adapter.out.db.InstaRepository
-import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryRepository
-import com.jun.instatistoryautomatorserver.adapter.out.db.TistoryUploadFailLogRepository
-import com.jun.instatistoryautomatorserver.application.model.InstaService
-import com.jun.instatistoryautomatorserver.application.model.TistoryService
-import com.jun.instatistoryautomatorserver.application.model.selenium.tistory.TistoryNewPostPage
-import com.jun.instatistoryautomatorserver.domain.InstaPost
-import com.jun.instatistoryautomatorserver.global.type.MediaType
+import insta.adapter.out.db.InstaRepository
+import insta.application.model.InstaService
+import insta.domain.InstaPost
+import insta.global.type.MediaType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.OffsetDateTime
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
@@ -17,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import tistory.adapter.out.db.TistoryRepository
+import tistory.adapter.out.db.TistoryUploadFailLogRepository
+import tistory.application.model.TistoryService
+import tistory.application.model.selenium.tistory.TistoryNewPostPage
 
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [TistoryService::class])
