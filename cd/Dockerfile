@@ -9,7 +9,6 @@ ARG SERVER_DIR_ARG="."
 ENV SERVER_DIR=$SERVER_DIR_ARG
 
 COPY $SERVER_DIR/*.jar app.jar
-COPY cd/spring_runner.sh spring_runner.sh
 
 EXPOSE 8080
 
@@ -26,7 +25,7 @@ RUN --mount=type=secret,id=$SECRETS_KEY \
             key=$(echo "$line" | cut -d= -f1); \
             value=$(echo "$line" | cut -d= -f2); \
             echo "Successfully stored $key"; \
-            echo "$key=\"$value\"" >> $SECRETS_ENV; \
+            echo "export $key=\"$value\"" >> $SECRETS_ENV; \
           done
 
-ENTRYPOINT ["sh", "-c", "sh spring_runner.sh ./$SECRETS_ENV && java -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "cat $SECRETS_ENV && export $(cat $SECRETS_ENV | xargs) && printenv && java -jar app.jar"]
