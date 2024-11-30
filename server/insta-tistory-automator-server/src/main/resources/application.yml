@@ -25,7 +25,6 @@ webdriver:
   arguments:
     - --headless=new
     - --lang=ko
-  remote-url: http://localhost:4444
 
 schedule:
   cron:
