@@ -12,14 +12,14 @@ COPY $SERVER_DIR/*.jar app.jar
 
 EXPOSE 8080
 
-ENV SECRETS_KEY="SECRETS_JSON"
+ENV SECRETS_FILE_ID="SECRETS_JSON"
 ENV SECRETS_ENV="secrets.env"
 
-RUN --mount=type=secret,id=$SECRETS_KEY \
+RUN --mount=type=secret,id=$SECRETS_FILE_ID \
     touch $SECRETS_ENV && \
     apk --update add jq && \
-    cat /run/secrets/$SECRETS_KEY \
-        | jq -r 'to_entries[] | "\(.key)=\(.value)"' \
+    cat /run/secrets/$SECRETS_FILE_ID \
+        | jq -r 'to_entries[] | "\(.key)=\(.value | @sha)"' \
         | while IFS= read -r line; \
           do \
             key=$(echo "$line" | cut -d= -f1); \
@@ -28,4 +28,4 @@ RUN --mount=type=secret,id=$SECRETS_KEY \
             echo "export $key=\"$value\"" >> $SECRETS_ENV; \
           done
 
-ENTRYPOINT ["sh", "-c", "cat $SECRETS_ENV && export $(cat $SECRETS_ENV | xargs) && printenv && java -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "export $(cat $SECRETS_ENV | xargs) && rm $SECRETS_ENV && java -jar app.jar"]
