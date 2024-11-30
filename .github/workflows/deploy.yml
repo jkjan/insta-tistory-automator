@@ -80,7 +80,6 @@ jobs:
       - name: Build and push to ECR
         uses: docker/build-push-action@v6
         with:
-          context: .
           file: cd/Dockerfile
           push: true
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
