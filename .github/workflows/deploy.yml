@@ -69,7 +69,9 @@ jobs:
         id: login-ecr
 
       - name: Setup secret
-        run: echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
+        run: |
+          echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
+          ls -al
 
       - name: Setup docker buildx
         id: buildx
