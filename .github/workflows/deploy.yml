@@ -81,6 +81,7 @@ jobs:
         run: |
           echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
           ls -al
+          ls server-jar-file -al
 
       - name: Setup docker buildx
         id: buildx
@@ -92,7 +93,7 @@ jobs:
         with:
           file: cd/Dockerfile
           push: true
-          build-args: server-jar-file
+          build-args: SERVER_DIR_ARG=server-jar-file
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
@@ -105,7 +106,7 @@ jobs:
         with:
           file: cd/Dockerfile
           push: true
-          build-args: server-jar-file
+          build-args: SERVER_DIR_ARG=server-jar-file
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           provenance: false
