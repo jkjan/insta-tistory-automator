@@ -74,13 +74,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
 
+      - name: Download Jar file
+        uses: actions/download-artifact@v4
+
       - name: Setup secret
         run: |
           echo "${{ toJson(secrets) }}" > ${{ env.SECRETS_FILE }}
           ls -al
-
-      - name: Download Jar file
-        uses: actions/download-artifact@v4
 
       - name: Setup docker buildx
         id: buildx
