@@ -8,7 +8,7 @@ ARG SERVER_DIR_ARG="."
 
 ENV SERVER_DIR=$SERVER_DIR_ARG
 
-COPY $SERVER_DIR/*.jar app.jar
+COPY $SERVER_DIR/build/libs/*.jar app.jar
 
 EXPOSE 8080
 

@@ -96,6 +96,7 @@ jobs:
           file: cd/Dockerfile
           push: true
           context: server-jar-file
+          build-args: ${{ env.SERVER_DIR }}
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
@@ -109,6 +110,7 @@ jobs:
           file: cd/Dockerfile
           push: true
           context: server-jar-file
+          build-args: ${{ env.SERVER_DIR }}
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           provenance: false
@@ -116,4 +118,3 @@ jobs:
       - name: Clean up
         if: always()
         run: |
-          rm -f ${{ env.SECRETS_FILE }}
