@@ -56,7 +56,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: server-jar-file
-          path: ${{ env.SERVER_DIR }}/build/libs/*.jar
+          path: |
+            ${{ env.SERVER_DIR }}/build/libs/*.jar
+            cd/Dockerfile
 
   push-to-ecr:
     runs-on: ubuntu-latest
@@ -93,8 +95,7 @@ jobs:
         with:
           file: cd/Dockerfile
           push: true
-          context: .
-          build-args: SERVER_DIR_ARG=server-jar-file
+          context: server-jar-file
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
@@ -107,8 +108,7 @@ jobs:
         with:
           file: cd/Dockerfile
           push: true
-          context: .
-          build-args: SERVER_DIR_ARG=server-jar-file
+          context: server-jar-file
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           provenance: false
