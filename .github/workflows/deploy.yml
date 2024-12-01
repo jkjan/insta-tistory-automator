@@ -96,7 +96,7 @@ jobs:
           file: server-jar-file/cd/Dockerfile
           push: true
           context: server-jar-file
-          build-args: ${{ env.SERVER_DIR }}
+          build-args: SERVER_DIR_ARG=${{ env.SERVER_DIR }}
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           cache-from: type=gha
@@ -110,7 +110,7 @@ jobs:
           file: server-jar-file/cd/Dockerfile
           push: true
           context: server-jar-file
-          build-args: ${{ env.SERVER_DIR }}
+          build-args: SERVER_DIR_ARG=${{ env.SERVER_DIR }}
           secret-files: ${{ env.SECRETS_KEY }}=${{ env.SECRETS_FILE }}
           tags: ${{ secrets.ECR_HOST }}/${{ env.SERVICE_NAME }}:latest
           provenance: false
