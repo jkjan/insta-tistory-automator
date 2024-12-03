@@ -118,3 +118,4 @@ jobs:
       - name: Clean up
         if: always()
         run: |
+          rm ${{ env.SECRETS_FILE }}
