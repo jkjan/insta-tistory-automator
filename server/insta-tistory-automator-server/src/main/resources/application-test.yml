@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insta-tistory-automator-server
+    username: test
+    password: test
+
+  flyway:
+    baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+webdriver:
+  arguments:
+    - --lang=ko
+  remote-url: http://localhost:4444
+
+schedule:
+  cron:
+    insta-tistory-automator: 0 * * * * * # every minute

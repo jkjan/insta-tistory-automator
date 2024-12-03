@@ -1,0 +1,17 @@
+# creates a testing environment and proceed tests and build
+# docker compose --env-file=.env -f ci/compose.yaml up --build --abort-on-container-exit --force-recreate
+
+services:
+  postgresql:
+    image: ${DB_IMAGE}
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_DB=${SERVICE_NAME}
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+
+  selenium:
+    image: ${SELENIUM_IMAGE}
+    ports:
+      - ${SELENIUM_PORT}:4444
